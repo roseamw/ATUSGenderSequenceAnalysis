@@ -1,0 +1,53 @@
+#delimit;
+clear;
+set more off;
+set mem 3g;
+ 
+local logdate = string( d(`c(current_date)'), "%dN.D.Y" );
+
+ 
+log using sequence_index_plot_`logdate'.log, t replace;
+
+include data_locations.doi; //paths for data files
+
+use `time_intervals'; 
+merge m:1 caseid using `person_recodes';
+keep if year==2006|year==2007;
+keep if weekday==1;
+keep if age>=25 & age<=64; //working age people only
+count;
+
+sort caseid order ;
+
+keep caseid order timestart timestop v5comb code4;
+
+save `sequence', replace; //sequence_plots.dta
+
+/*
+reshape wide v5comb timestart timestop, i(caseid) j(order);
+*/
+
+sqset code4 caseid order;
+sqtab, so gapinclude;
+return list;
+sqtab, se gapinclude;
+sqtab, gapinclude;
+return list;
+sqtab, ranks(1/100) gapinclude;
+
+
+
+egen numdiff=sqelemcount(code4);
+tab numdiff;
+
+*sqindexplot, color(blue red yellow green);
+
+sqom, name(om1);
+describe om1;
+sqindexplot, order(om1);
+
+sqdes, gapinclude;
+
+
+
+log close;
