@@ -1,4 +1,8 @@
-use			"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences_all minutes"		, clear
+global jppath "D:\GitHub"		/*Set up Joanna's file path*/
+
+
+cd 			"$jppath\ATUSGenderSequenceAnalysis_data"
+use			"$jppath\ATUSGenderSequenceAnalysis_data\sequences_all minutes"		, clear
 
 ******************************************************************************************
 * Create 10 Minute file *
@@ -157,7 +161,10 @@ by tucaseid tenmin: replace tenmode = dactiv[1] if tenmode==. 		/* 	Replacing mi
 															
 label value 	tenmode	dactivlbl
 
-collapse (max)	selfcare		eating			workedu			carework						///
+collapse (max)	selfsum			eatsum			worksum			dailycaresum	devlpcaresum	///
+				dailyhswksum	elsehswksum		telesum			passnotvsum		actleissum		///
+				socleissum 		shopsum			dothersum										///
+				selfcare		eating			workedu			carework						///
 				housework		passleis		other											///
 				dailycare		devlpcare		dailyhswk		elsehswk						///
 				tele			passnotv		actleis			socleis							///
@@ -165,24 +172,18 @@ collapse (max)	selfcare		eating			workedu			carework						///
 				married 		nevmar			unmarpartner 	divsep							///
 				numberhhchild 	kidu2dum		kid2to5			exfamdum						///
 				lths 			highschool 		somecol 		baormore						///
-				parttime 		fulltime 														///
+				parttime 		fulltime 		raceethnicity	edcat			marstat			///
 				white			black			asian			hispanic		otherrace		///
-				teage 			weekend			complex10		tenmode 						///
+				teage 			weekend			tenmode 										///
 				activity 		dactiv			startmin										///
 				female			tufnwgtp		[aweight=tufnwgtp], by(tucaseid tenmin)
 edit
-save		"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences_all_tenmin"		, replace
+save		"sequences_all_tenmin"		, replace
 
 
 ******************************************************************************************
 * COMPLEXITY EQUATION *
 ******************************************************************************************
-label define 	dactivlbl 		1 	"Sleep/Self-Care"	2	"Eating"		3	"Work & Edu"		///
-								4 	"Daily Carework"	5 	"Devep. Care"	6 	"Daily HSWK"		///
-								7 	"Other HSWK"		8	"Television"	9	"Pass Leis"			///
-								10	"Active Leisure"	11	"Social Leis."	12	"Shopping"			///
-								13	"Other"
-
 label value 	tenmode	dactivlbl
 
 tsset tucaseid tenmin
@@ -329,19 +330,19 @@ cap drop	numepi
 egen		numepi	=max(_spell), by(tucaseid)
 
 
-save		"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences_all_tenmin"		, replace
-use			"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences_all_tenmin",		, clear
+save		"sequences_all_tenmin"		, replace
+use			"sequences_all_tenmin"		, clear
 
 preserve
 drop if female==1
 vreverse dactiv,	gen(dactiv1)
-save 		"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences_men_tenmin"		, replace
+save 		"sequences_men_tenmin"		, replace
 restore
 
 preserve
 drop if female==0
 vreverse dactiv,	gen(dactiv1)
-save 		"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences_women_tenmin"		, replace
+save 		"sequences_women_tenmin"		, replace
 restore
 
 // CREATE SUMMMARY FILE
@@ -351,10 +352,10 @@ collapse (max)	selfsum			eatsum			worksum			dailycaresum	devlpcaresum	///
 				married 		nevmar			unmarpartner 	divsep							///
 				numberhhchild 	kidu2dum		kid2to5			exfamdum						///
 				lths 			highschool 		somecol 		baormore						///
-				parttime 		fulltime 														///
+				parttime 		fulltime 		raceethnicity									///
 				white			black			asian			hispanic		otherrace		///
 				teage 			weekend			complex10		dvariety		transsum10		///
 				qtrans10		female			tufnwgtp		[aweight=tufnwgtp], by(tucaseid)
 
-save		"D:\Dropbox\Sayer\Gendered Sequences\Stata\10minute\sequences_summary"
+save		"sequences_summary", replace
 

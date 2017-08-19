@@ -1,8 +1,9 @@
 #delimit ;
 
-* Edit the insheet statement to reference the data file on your computer.;
+* Edit the import statement to reference the data file on your computer.;
+* Edit save code at end;
 
-insheet  
+import delimited  
 tucaseid
 gemetsta
 gtmetsta
@@ -458,16 +459,16 @@ t500105
 t500106
 t500107
 t509989
- using D:\Dropbox\Sayer\MaritalStatus\Data_Analysis\atussum_0312\atussum_0312.dat, names comma ;
+ using "D:\Dropbox\Data\ATUS\ATUS0316\atussum_0316\atussum_0316.dat", stringcols(1) ;
 
 label variable tucaseid "ATUS Case ID (14-digit identifier)";
-label variable peeduca "Edited: what is the highest level of school you have completed or the highest degree you have received?";
+label variable peeduca "Edited: highest level of school you have completed or highest degree received?";
 label variable ptdtrace "Race (topcoded)";
-label variable gtmetsta "Metropolitan status (2000 definitions)";
+label variable gtmetsta "Metropolitan status (2000 or 2010 definitions, see note)";
 label variable pehspnon "Edited: are you Spanish, Hispanic, or Latino?";
 label variable gemetsta "Metropolitan status (1990 definitions)";
 label variable trchildnum "Number of household children < 18";
-label variable tudiaryday "Day of the week of diary day (day of the week about which the respondent was interviewed)";
+label variable tudiaryday "Day of the week of diary day (day about which the respondent was interviewed)";
 label variable trernwa "Weekly earnings (2 implied decimals)";
 label variable trholiday "Flag to indicate if diary day was a holiday";
 label variable trspftpt "Full time or part time employment status of spouse or unmarried partner";
@@ -678,9 +679,9 @@ label variable t090102 "Using meal preparation services";
 label variable t090103 "Using clothing repair and cleaning services";
 label variable t090104 "Waiting associated with using household services";
 label variable t090199 "Using household services, n.e.c.*";
-label variable t090201 "Using home maint/repair/décor/construction svcs";
-label variable t090202 "Waiting associated w/ home main/repair/décor/constr";
-label variable t090299 "Using home maint/repair/décor/constr services, n.e.c.*";
+label variable t090201 "Using home maint/repair/decor/construction svcs";
+label variable t090202 "Waiting associated w/ home main/repair/decor/constr";
+label variable t090299 "Using home maint/repair/decor/constr services, n.e.c.*";
 label variable t090301 "Using pet services";
 label variable t090302 "Waiting associated with pet services";
 label variable t090399 "Using pet services, n.e.c.*";
@@ -881,7 +882,7 @@ label variable t180806 "Travel related to using real estate services";
 label variable t180807 "Travel related to using veterinary services";
 label variable t180899 "Travel rel. to using prof. & personal care services, n.e.c.*";
 label variable t180901 "Travel related to using household services";
-label variable t180902 "Travel related to using home main./repair/décor./construction svcs";
+label variable t180902 "Travel related to using home main./repair/decor./construction svcs";
 label variable t180903 "Travel related to using pet services (not vet)";
 label variable t180904 "Travel related to using lawn and garden services";
 label variable t180905 "Travel related to using vehicle maintenance & repair services";
@@ -1050,5 +1051,4 @@ label values tudiaryday labeltudiaryday;
 label values tesex      labeltesex;
 
 describe, short;
-
-save D:\Dropbox\Sayer\MaritalStatus\Data_Analysis\atussum_0312\atus.sum.dta, replace;
+save "D:\Dropbox\Data\ATUS\ATUS0316\atussum_0316\atus.sum.dta", replace;

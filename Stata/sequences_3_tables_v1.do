@@ -1,9 +1,10 @@
 **TABLES FOR PAPER
 
 clear
-set more off
-cd 			"D:\Dropbox\Sayer\Gendered Sequences\Stata"
-use			"D:\Dropbox\Sayer\Gendered Sequences\Stata\10minute\sequences_all_tenmin"		, clear
+global 		jppath "D:\GitHub"								/*Set up Joanna's file path*/
+
+cd 			"$jppath\ATUSGenderSequenceAnalysis_data"
+use			"$jppath\ATUSGenderSequenceAnalysis_data\sequences_all_tenmin"		, clear
 
 sort tucaseid
 
@@ -76,7 +77,7 @@ restore
 **********************************************************************************************************************
 *Table 1
 **********************************************************************************************************************
-cd 			"D:\Dropbox\Sayer\Gendered Sequences\Stata"
+cd 			"$jppath\ATUSGenderSequenceAnalysis\Stata\Stata tables"
 
 preserve
 collapse (max)	selfsum			eatsum			worksum			dailycaresum	devlpcaresum	///
@@ -144,7 +145,8 @@ restore
 **********************************************************************************************************************
 *Tempograms
 **********************************************************************************************************************
-use			"D:\Dropbox\Sayer\Gendered Sequences\Stata\10minute\sequences_men_tenmin"				, clear
+cd 			"$jppath\ATUSGenderSequenceAnalysis_data"
+use			"sequences_men_tenmin"				, clear
 
 proprcspline dactiv1 tenmin if weekend==0, 																					///
 	catlegend																												///
@@ -165,7 +167,7 @@ proprcspline dactiv1 tenmin if weekend==1, 																					///
 	legend(size(small)) 
 
 	
-use			"D:\Dropbox\Sayer\Gendered Sequences\Stata\10minute\sequences_women_tenmin"				, clear
+use			"sequences_women_tenmin"				, clear
 
 proprcspline dactiv1 tenmin if weekend==0, 																					///
 	catlegend																												///
@@ -190,8 +192,7 @@ proprcspline dactiv1 tenmin if weekend==1, 																					///
 **********************************************************************************************************************
 clear
 set more off
-cd 			"D:\Dropbox\Sayer\Gendered Sequences\Stata"
-use			"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences_all_tenmin"		, clear
+use			"sequences_all_tenmin"		, clear
 
 sort tucaseid
 
@@ -318,8 +319,8 @@ log close
 *Table 3 - Logisitic Regression of Complexity Index
 **********************************************************************************************************************
 clear
-cd 			"D:\Dropbox\Sayer\Gendered Sequences\Stata"
-use			"D:\Dropbox\Sayer\Gendered Sequences\Stata\10minute\sequences_all_tenmin"		, clear
+use			"sequences_all_tenmin"		, clear
+cd 			"$jppath\ATUSGenderSequenceAnalysis\Stata\Stata tables"
 sort tucaseid
 
 

@@ -1,7 +1,12 @@
 clear
 
-cd 	"D:\Dropbox\Sayer\Gendered Sequences\Stata"
-use "D:\Dropbox\Data\ATUS\atusact_0312\atus.activitybuild.dta", replace
+// This file draws upon the "Multi-Year ATUS Data Files" downloaded from: https://www.bls.gov/tus/datafiles_0316.htm
+// The .do files for the initial data is located: "ATUSGenderSequenceAnalysis\Stata\ATUS Setup"
+
+global jppath "D:\GitHub"		/*Set up Joanna's file path*/
+
+cd 	"$jppath\ATUSGenderSequenceAnalysis_data"
+use "D:\Dropbox\Data\ATUS\ATUS0316\atusact_0316\atus0316act", replace	/*This is where my data is stored. How to share? */
 
 sort tucaseid 
 
@@ -408,7 +413,7 @@ clear
 *PERSON LEVEL
 
 /*input ATUS Roster File data*/
-run "D:\Dropbox\Data\ATUS\atusrost_0312\atusrost_0312.do"
+run "$jppath\ATUSGenderSequenceAnalysis\Stata\ATUS Setup\atusrost_0316.do"
 
 capture drop	numterrp
 bysort 			tucaseid: 		generate numterrp = _N
@@ -542,10 +547,10 @@ clear
 *merge CPS data to ATUS Roster (recoded) data
 
 *input ATUS CPS file data
-run 	"D:\Dropbox\Data\ATUS\atuscps_0312\atuscps_0312.do"	, nostop
+run 	"$jppath\ATUSGenderSequenceAnalysis\Stata\ATUS Setup\atuscps_0316.do"	, nostop
 keep 	if tulineno==1
 sort 	tucaseid
-save 	"D:\Dropbox\Data\ATUS\atuscps_0312\atus_cps.dta"	, replace
+save 	"atus_cps.dta", replace
 
 *merge CPS data to ATUS Roster data
 merge 	1:1 tucaseid using "atusroster_recodes.dta"
@@ -559,7 +564,7 @@ save 	"atus_roster&recodes_CPS"													, replace
 *merge Activity Summary data to ATUS Roster (recoded) & CPS data
 clear
 *input ATUS activity summary file data
-run 	"D:\Dropbox\Data\ATUS\atussum_0312\atussum_0312.do"	,nostop
+run 	"$jppath\ATUSGenderSequenceAnalysis\Stata\ATUS Setup\atussum_0316.do"	,nostop
 sort 	tucaseid
 save 	"atus_summary"																,replace
 
@@ -571,7 +576,7 @@ tab			_merge
 drop 	if 	_merge !=3
 drop		_merge
 sort 	tucaseid
-save 	"ATUS0312_roster_cps_summary", replace
+save 	"ATUS0316_roster_cps_summary", replace
 
 
 ************************************************************************************************
@@ -581,7 +586,7 @@ save 	"ATUS0312_roster_cps_summary", replace
 use "ATUS_activities", clear
 
 
-merge 	m:1 tucaseid using "ATUS0312_roster_cps_summary.dta"
+merge 	m:1 tucaseid using "ATUS0316_roster_cps_summary.dta"
 tab 		_merge
 drop 	if 	_merge !=3
 drop		_merge
@@ -781,12 +786,13 @@ drop if		employ==2
 drop if 	numberhhchild==0
 
 
-// LIMIT Cases to 2012
+// LIMIT Cases to 2016
+destring 		tucaseid, replace
 format			tucaseid %20.0g
 sort 			tucaseid
-keep if			tucaseid	> 20120000000000
+keep if			tucaseid	> 20160000000000
 
-// Random Sample of 500 Cases from 2012
+// Random Sample of 500 Cases from 2016
 	/*
 	sort			tucaseid
 	preserve
@@ -811,8 +817,8 @@ tab 		nomiss
 drop if 	nomiss==0 
 
 
-save 		"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences", replace
-use			"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences", clear
+save 		"sequences_0316", replace
+use			"sequences_0316", clear
 
 ***************************************************************************************************
 ** Creating activity variables
@@ -1011,9 +1017,9 @@ replace		tot95		=1 if actsum >= 770
 
 */
 
-*save		"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences--500sample", 	replace
- save		"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences--2012sample", 	replace
- use		"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences--2012sample", 	clear
+*save		"sequences--500sample", 	replace
+ save		"sequences--2016sample", 	replace
+ use		"sequences--2016sample", 	clear
  
 ******************************************************************************************
 * CREATE 144 EPISODE FILE *
@@ -1057,4 +1063,4 @@ replace		startmin=startmin+239	/* make start minute equal to 240 which is 4am			
 replace		endmin	=endmin+239		/* make end minute correspond with startmin							*/
 
 
-save		"D:\Dropbox\Sayer\Gendered Sequences\Stata\sequences_all minutes"		, replace
+save		"sequences_all minutes"		, replace

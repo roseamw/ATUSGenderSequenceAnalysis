@@ -1,14 +1,15 @@
 #delimit ;
  
-* Edit the insheet statement to reference the data file on your computer.;
+* Edit the import statement to reference the data file on your computer.;
+* Edit save code at end;
  
-insheet
+import delimited
  tucaseid
  tulineno
  terrp
  teage
  tesex
- using D:\Dropbox\Sayer\MaritalStatus\Data_Analysis\atusrost_0312\atusrost_0312.dat, names comma ;
+ using "D:\Dropbox\Data\ATUS\ATUS0316\atusrost_0316\atusrost_0316.dat", stringcols(1) ;
  
 label variable teage "Edited: age";
 label variable tucaseid "ATUS Case ID (14-digit identifier)";
@@ -48,4 +49,4 @@ label values tesex   labeltesex;
  
 describe, short;
 
-save D:\Dropbox\Sayer\MaritalStatus\Data_Analysis\atusrost_0312\atus.roster.dta, replace;
+save "D:\Dropbox\Data\ATUS\ATUS0316\atusrost_0316\atus.roster.dta", replace

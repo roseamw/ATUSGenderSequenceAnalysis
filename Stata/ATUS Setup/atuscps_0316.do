@@ -1,15 +1,18 @@
 #delimit ;
  
-* Edit the insheet statement to reference the data file on your computer.;
+* Edit the import statement to reference the data file on your computer.;
  
-insheet
+import delimited
 tucaseid
 tulineno
+gediv
 gemetsta
 gepseucl
 gepseust
 gereg
 gestfips
+gtcbsa
+gtco
 gtmetsta
 hefaminc
 hehousut
@@ -131,6 +134,8 @@ penlfact
 penlfjh
 penlfret
 peparent
+pepdemp1
+pepdemp2
 peret1
 perrp
 peschenr
@@ -145,6 +150,7 @@ prcivlf
 prcow1
 prcow2
 prcowpg
+prdasian
 prdisc
 prdisflg
 prdtcow1
@@ -195,6 +201,8 @@ prwkstat
 prwntjob
 ptdtrace
 pthr
+ptnmemp1
+ptnmemp2
 ptot
 ptwk
 puabsot
@@ -235,14 +243,17 @@ puslfprx
 puwk
 tratusr
 tubwgt
- using D:\Dropbox\Sayer\MaritalStatus\Data_Analysis\atuscps_0312\atuscps_0312.dat, names comma ;
- 
+ using "D:\Dropbox\Data\ATUS\ATUS0316\atuscps_0316\atuscps_0316.dat", stringcols(1) ;
+
+label variable gediv "Division";
 label variable gemetsta "Metropolitan status (1990 definitions)";
 label variable gepseucl "Scrambled pseudo primary sampling unit (PSU) cluster";
 label variable gepseust "Scrambled pseudo primary sampling unit (PSU) collapsed stratum";
 label variable gereg "Region";
 label variable gestfips "Federal Processing Information Standards (FIPS) state code";
-label variable gtmetsta "Metropolitan status (2000 definitions)";
+label variable gtcbsa "Specific metropolitan core based statistical area (CBSA) code";
+label variable gtco "Federal Processing Standards (FIPS) county code";
+label variable gtmetsta "Metropolitan status (2000 or 2010 definitions, see note)";
 label variable hefaminc "Edited: Family Income";
 label variable hehousut "Edited: type of housing unit";
 label variable hephoneo "Edited: is a telephone interview acceptable?";
@@ -271,13 +282,13 @@ label variable huhhnum "Household number";
 label variable huinttyp "Type of interview";
 label variable huprscnt "Number of actual and attempted personal contacts";
 label variable hurespli "PULINENO of the current respondent";
-label variable huspnish "Is Spanish the only language spoken by all members of this household who are 15 years and older?";
+label variable huspnish "Spanish only language spoken by all members of household 15 years and older?";
 label variable hxfaminc "HEFAMINC: allocation flag";
 label variable peabspdo "Edited: are you being paid by your employer for any of the time off last week?";
 label variable peabsrsn "Edited: what was the main reason you were absent from work last week?";
 label variable peafever "Edited: did you ever serve on active duty in the U.S. Armed Forces?";
 label variable peafnow "Edited: are you now in the Armed Forces?";
-label variable peafwhen "Edited: I was told that you served on active duty of the U.S. Armed Forces.  When did you serve?";
+label variable peafwhen "Edited: was told you served on active duty in Armed Forces. When did you serve?";
 label variable peafwhn1 "Edited: when did you serve in the Armed Forces? (first period)";
 label variable peafwhn2 "Edited: when did you serve in the Armed Forces? (second period)";
 label variable peafwhn3 "Edited: when did you serve in the Armed Forces? (third period)";
@@ -288,39 +299,39 @@ label variable pedadtyp "Edited: Is household child a biological, step or adopte
 label variable pedipged "Edited: how did you get your high school diploma?";
 label variable pedisdrs "Edited: Does this person have difficulty dressing or bathing?";
 label variable pedisear "Edited: Is this person deaf or does this person have serious difficulty hearing?";
-label variable pediseye "Edited: Is this person blind or does this person have serious difficulty seeing even when wearing glasses?";
-label variable pedisout "Edited: Because of a physical, mental, or emotional condition does this person have difficulty doing errands alone such as visiting a doctor's office or shopping?";
+label variable pediseye "Edited: Is this person blind or have serious difficulty seeing wearing glasses?";
+label variable pedisout "Edited: Edited: does this person have difficulty doing errands alone?";
 label variable pedisphy "Edited: Does this person have serious difficulty walking or climbing stairs?";
-label variable pedisrem "Edited: Because of a physical, mental, or emotional condition, does this person have serious difficulty concentrating, remembering, or making decisions?";
+label variable pedisrem "Edited: does person have difficulty concentrating/remembering/making decisions?";
 label variable pedw4wk "Edited: did you do any of this work during the last 4 weeks?";
 label variable pedwavl "Edited: last week, could you have started a job if one had been offered?";
 label variable pedwavr "Edited: why could you not have started a job if one had been offered last week?";
 label variable pedwlko "Edited: did you look for work any time in the last 12 months?";
 label variable pedwlkwk "Edited: and since you left that job or business have you looked for work?";
-label variable pedwrsn "Edited: what is the main reason you were not looking for work during the last 4 weeks?";
+label variable pedwrsn "Edited: main reason you were not looking for work during the last 4 weeks?";
 label variable pedwwk "Edited: did you actually work at a job or business during the last 12 months?";
 label variable pedwwnto "Edited: do you currently want a job, either full or part time?";
-label variable peeduca "Edited: what is the highest level of school you have completed or the highest degree you have received?";
+label variable peeduca "Edited: highest level of school completed or the highest degree received?";
 label variable peern "Edited: total weekly overtime earnings (2 implied decimals)";
-label variable peerncov "Edited: on this job, are you covered by a union or employee association contract?";
-label variable peernh1o "Edited: excluding overtime pay, tips, and commissions, what is your hourly rate of pay on your main job? (2 implied decimals)";
-label variable peernh2 "Edited: excluding overtime pay, tips, and commissions, what is your hourly rate of pay on your main job? (2 implied decimals)";
+label variable peerncov "Edited: on this job, are you covered by a union or employee assoc.";
+label variable peernh1o "Edited: hrly pay rate (main job) exc. overtime, tips, & commissions (2 decimals)";
+label variable peernh2 "Edited: hrly pay rate (main job) exc. overtime, tips, & commissions (2 decimals)";
 label variable peernhro "Edited: how many hours do you usually work per week at this rate?";
 label variable peernhry "Edited: hourly/non-hourly status";
-label variable peernlab "Edited: on this job, are you a member of a labor union or of an employee association similar to a union?";
-label variable peernper "Edited: for your main job, what is the easiest way for you to report your total earnings before taxes or other deductions: hourly, weekly, annually, or some other way?";
-label variable peernrt "Edited: even though you told me it is easier to report your earnings another way, are you paid at an hourly rate on your main job?";
+label variable peernlab "Edited: on this job, are you a member of a labor union or of an employee assoc.?";
+label variable peernper "Edited: main job, easiest to report earnings: hourly, weekly, annually, or other";
+label variable peernrt "Edited: are you paid at an hourly rate on this job?";
 label variable peernuot "Edited: do you usually receive overtime pay, tips, or commissions at your job?";
 label variable peernwkp "Edited: how many weeks a year do you get paid?";
 label variable pefntvty "Edited: in what country was your father born?";
 label variable pegr6cor "Edited: did you complete six or more graduate or professional school courses?";
-label variable pegrprof "Edited: since completing your bachelor's degree, have you taken any graduate or professional school courses for credit?";
-label variable pehgcomp "Edited: what was the highest grade of regular school you completed before receiving your GED?";
+label variable pegrprof "Edited: since BA, taken any graduate/professional school courses for credit?";
+label variable pehgcomp "Edited: highest grade of regular school you completed before receiving your GED?";
 label variable pehract1 "Edited: last week, how many hours did you actually work at your main job?";
 label variable pehract2 "Edited: last week, how many hours did you actually work at your other job(s)?";
 label variable pehractt "Edited: total hours actually worked last week (sum of PEHRACT1 and PEHRACT2)";
-label variable pehravl "Edited: last week, could you have worked full time if the hours had been available?";
-label variable pehrftpt "Edited: do you usually work more than 35 hours per week at your job(s)/family business?";
+label variable pehravl "Edited: last week, could you have worked full time if hours had been available?";
+label variable pehrftpt "Edited: usually work > 35 hours per week at your job(s)/family business?";
 label variable pehrrsn1 "Edited: what is your main reason for working part time?";
 label variable pehrrsn2 "Edited: what is the main reason you do not want to work full time?";
 label variable pehrrsn3 "Edited: what is the main reason you worked less than 35 hours last week?";
@@ -338,17 +349,17 @@ label variable peio2ocd "Edited: occupation code (second job)";
 label variable pejhrsn "Edited: what is the main reason you left your last job?";
 label variable pejhwant "Edited: do you intend to look for work during the next 12 months?";
 label variable pejhwko "Edited: have you worked at a job or business at any time in the last 12 months?";
-label variable pelayavl "Edited: could you have returned to work during the last seven days if you had been recalled?";
+label variable pelayavl "Edited: could you have returned to work during the last 7 days if recalled?";
 label variable pelaydur "Edited: duration of layoff (number of weeks)";
-label variable pelayfto "Edited: is the job from which you are on layoff a full time job of 35 hours or more per week?";
-label variable pelaylk "Edited: even though you are to be called back to work, have you been looking for work during the last 4 weeks?";
-label variable pelkavl "Edited: could you have started a job in the last seven days if one had been offered?";
+label variable pelayfto "Edited: the job from which you are on layoff full time job of >=35 hours/week?";
+label variable pelaylk "Edited: though you are to be called back to work, looking for work last 4 weeks?";
+label variable pelkavl "Edited: could you have started a job in the last 7 days if one had been offered?";
 label variable pelkdur "Edited: duration of job seeking (number of weeks)";
 label variable pelkfto "Edited: are you seeking a full time or part time job?";
-label variable pelkll1o "Edited: before you started looking for work, what were you doing: working, going to school, or something else?";
+label variable pelkll1o "Edited: before you started looking for work, what were you doing?";
 label variable pelkll2o "Edited: did you lose or quit that job, or was it a temporary job that ended?";
 label variable pelklwo "Edited: when did you last work?";
-label variable pelkm1 "Edited: what are all of the things you have done to find work during the last 4 weeks? (first method)";
+label variable pelkm1 "Edited: things you have done to find work during the last 4 weeks? (1st method)";
 label variable pelndad "Edited: PULINENO of father";
 label variable pelnmom "Edited: PULINENO of mother";
 label variable pemaritl "Edited: are you now married, widowed, divorced, separated, or never married?";
@@ -357,12 +368,14 @@ label variable pemjot "Edited: in the last seven days, did you have more than on
 label variable pemlr "Edited: monthly labor force recode";
 label variable pemntvty "Edited: in what country was your mother born?";
 label variable pemomtyp "Edited: Is household child a biological, step, or adopted child?";
-label variable pems123 "Edited: was your master's degree program a one-year, two-year, or three-year program?";
+label variable pems123 "Edited: was your master's degree program a 1-year, 2-year, or 3-year program?";
 label variable penatvty "Edited: in what country were you born?";
-label variable penlfact "Edited: what best describes your situation at this time? For example, are you disabled, ill, in school, taking care of house or family, or something else?";
+label variable penlfact "Edited: what best describes your situation at this time? (Not in labor force)";
 label variable penlfjh "Edited: when did you last work at a job or business?";
 label variable penlfret "Edited: are you retired from a job or business?";
 label variable peparent "Edited: PULINENO of parent";
+label variable pepdemp1 "Does this person usually have any paid employees?";
+label variable pepdemp2 "Does this person usually have any paid employees?";
 label variable peret1 "Edited: do you currently want a job, either full or part time?";
 label variable perrp "Edited: how is this person related to you?";
 label variable peschenr "Edited: last week, were you enrolled in a high school, college, or university?";
@@ -377,6 +390,7 @@ label variable prcivlf "Civilian labor force";
 label variable prcow1 "Class of worker recode (main job)";
 label variable prcow2 "Class of worker recode (second job)";
 label variable prcowpg "Class of worker - private or government";
+label variable prdasian "Detailed Asian race recode";
 label variable prdisc "Discouraged worker recode";
 label variable prdisflg "Does this person have any of these disability conditions?";
 label variable prdtcow1 "Detailed class of worker recode (main job)";
@@ -427,32 +441,34 @@ label variable prwkstat "Full time or part time work status";
 label variable prwntjob "Not in labor force recode - want a job or other not in labor force";
 label variable ptdtrace "Race (topcoded)";
 label variable pthr "Hourly pay topcode flag";
+label variable ptnmemp1 "Excluding all owners, how many paid employees does this person usually have?";
+label variable ptnmemp2 "Excluding all owners, how many paid employees does this person usually have?";
 label variable ptot "Weekly overtime amount topcode flag";
 label variable ptwk "Weekly earnings topcode flag";
 label variable puabsot "In the last seven days, did you have a job either full or part time?";
 label variable puafever "Did you ever serve on active duty in the U.S. Armed Forces?";
 label variable pubus1 "Last week, did you do any unpaid work in the family business or farm?";
 label variable pubus2ot "Do you receive any payments or profits from the business?";
-label variable pudis "Last time we spoke to someone in this household, you were reported to have a disability. Does your disability continue to prevent you from accepting any kind of work during the next six months?";
-label variable pudis1 "Does your disability prevent you from accepting any kind of work during the next six months?";
-label variable pudis2 "Do you have a disability that prevents you from accepting any kind of work during the next six months?";
-label variable puhroff1 "Last week, did you lose or take off any hours from your job for any reason such as illness, slack work, vacation, or holiday?";
+label variable pudis "Disability continues to prevent you from accepting work in next 6 months?";
+label variable pudis1 "Disability prevents you from accepting work in the next 6 months?";
+label variable pudis2 "Disability prevents you from accepting work in the next 6 months?";
+label variable puhroff1 "Last week, lose or take off any hours from your job for any reason?";
 label variable puhroff2 "How many hours did you take off?";
 label variable puhrot1 "Last week, did you work any overtime or extra hours? (main job)";
 label variable puhrot2 "How many additional hours did you work?";
 label variable pujhdp1o "Did you do any of this work in the last 4 weeks?";
 label variable pulay "During the last seven days, were you on layoff from a job?";
-label variable pulay6m "Have you been given any indication that you will be recalled to work within the next 6 months?";
+label variable pulay6m "Given any indication that you will be recalled to work within the next 6 months?";
 label variable pulayavr "Why could you not have started a job in the last week?";
 label variable pulaydt "Has your employer given you a date to return to work? (to layoff job)";
 label variable pulineno "Person line number";
 label variable pulk "Have you been doing anything to find work during the last 4 weeks?";
 label variable pulkavr "Why could you not have started a job last week?";
-label variable pulkdk1 "You said you have been trying to find work. How did you go about looking? (first method)";
+label variable pulkdk1 "Said trying to find work. How did you go about looking? (1st method)";
 label variable pulkdk2 "PULKDK1 text: (second method)";
 label variable pulkdk3 "PULKDK1 text: (third method)";
 label variable pulkdk4 "PULKDK1 text: (fourth method)";
-label variable pulkm2 "What are all of the things you have been doing to find work during the last 4 weeks? (second method)";
+label variable pulkm2 "Things you have done to find work during the last 4 weeks? (second method)";
 label variable pulkm3 "PULKM2 text: (third method)";
 label variable pulkm4 "PULKM2 text: (fourth method)";
 label variable pulkm5 "PULKM2 text: (fifth method)";
@@ -470,6 +486,20 @@ label variable tubwgt "ATUS base weight";
 label variable tucaseid "ATUS Case ID (14-digit identifier)";
 label variable tulineno "ATUS person line number";
 
+label define labelgediv
+-1 "Blank"
+-2 "Don't Know"
+-3 "Refused"
+1 "New England"
+2 "Middle Atlantic"
+3 "East North Central"
+4 "West North Central"
+5 "South Atlantic"
+6 "East South Central"
+7 "West South Central"
+8 "Mountain"
+9 "Pacific"
+;
 label define labelgereg
 -1 "Blank"
 -2 "Don't Know"
@@ -1341,6 +1371,20 @@ label define labelpenlfret
 1 "Yes"
 2 "No"
 ;
+label define labelpepdemp1
+-1 "Blank"
+-2 "Don't Know"
+-3 "Refused"
+1 "Yes"
+2 "No"
+;
+label define labelpepdemp2
+-1 "Blank"
+-2 "Don't Know"
+-3 "Refused"
+1 "Yes"
+2 "No"
+;
 label define labelperet1
 -1 "Blank"
 -2 "Don't Know"
@@ -1497,6 +1541,18 @@ label define labelprcowpg
 1 "Private"
 2 "Government"
 ;
+label define labelprdasian
+-1 "Blank"
+-2 "Don't Know"
+-3 "Refused"
+1 "Asian Indian"
+2 "Chinese"
+3 "Filipino"
+4 "Japanese"
+5 "Korean"
+6 "Vietnamese"
+7 "Other"
+;
 label define labelprdisc
 -1 "Blank"
 -2 "Don't Know"
@@ -1551,8 +1607,11 @@ label define labelprdthsp
 1 "Mexican"
 2 "Puerto Rican"
 3 "Cuban"
-4 "Central/South American"
-5 "Other Spanish"
+4 "Central/South American (before 2014) or Dominican (starting in 2014)"
+5 "Other Spanish (before 2014) or Salvadoran (starting in 2014)"
+6 "Other Central American, excluding Salvadoran (starting in 2014)"
+7 "South American (starting in 2014)"
+8 "Other Spanish (starting in 2014)"
 ;
 label define labelprdtind1
 -1 "Blank"
@@ -1933,7 +1992,9 @@ label define labelprinuyer
 19 "2004-2005 or 2004-2006 or 2004-2007 (see note)"
 20 "2006-2007 or 2006-2008 or 2006-2009 (see note)"
 21 "2008-2009 or 2008-2010 or 2008-2011 (see note)"
-22 "2010-2012 (see note)"
+22 "2010-2011 or 2010-2012 or 2010-2013 (see note)"
+23 "2012-2013 or 2012-2014 or 2012-2015 (see note)"
+24 "2014-2016 (see note)"
 ;
 label define labelprioelg
 -1 "Blank"
@@ -2641,6 +2702,7 @@ label define labeltratusr
 1 "Responded to ATUS"
 ;
 
+label values gediv labelgediv;
 label values gereg labelgereg;
 label values gemetsta labelgemetsta;
 label values gtmetsta labelgtmetsta;
@@ -2725,6 +2787,8 @@ label values pems123 labelpems123;
 label values penlfact labelpenlfact;
 label values penlfjh labelpenlfjh;
 label values penlfret labelpenlfret;
+label values pepdemp1 labelpepdemp1;
+label values pepdemp2 labelpepdemp2;
 label values peret1 labelperet1;
 label values perrp labelperrp;
 label values peschenr labelpeschenr;
@@ -2738,6 +2802,7 @@ label values prcivlf labelprcivlf;
 label values prcow1 labelprcow1;
 label values prcow2 labelprcow2;
 label values prcowpg labelprcowpg;
+label values prdasian labelprdasian;
 label values prdisc labelprdisc;
 label values prdisflg labelprdisflg;
 label values prdtcow1 labelprdtcow1;
@@ -2826,5 +2891,3 @@ label values tratusr labeltratusr;
 
  
 describe, short;
-
-sort tucaseid;
