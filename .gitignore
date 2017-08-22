@@ -1,4 +1,5 @@
-/atus_extracts/*.dat
-/atus_extracts/*.dat.gz
-/atus_extracts/*.dta
+/data/atus_extracts/*.dat
+/data/atus_extracts/*.dat.gz
+/data/atus_extracts/*.dta
+/data/generated_data_files/*.dta
 

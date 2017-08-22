@@ -1,0 +1,19 @@
+#delimit;
+clear;
+set more off;
+
+local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
+
+log using log_files/01_run_extract_`logdate'.log, t replace;
+
+cd ../data/atus_extracts;
+shell gzip -d atus_00508.dat.gz;
+do atus_00508;
+
+sort caseid actline;
+
+save ../data/generated_data_files/extract.dta, replace;
+
+cd ../do_files;
+
+log close;

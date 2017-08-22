@@ -1,0 +1,6 @@
+#delimit;
+clear;
+set more off;
+
+do 01_run_extract.txt;
+do 02_code_activities.txt;
