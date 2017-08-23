@@ -3,7 +3,7 @@
        log:  /pkg/time-use/GitHub/ATUSGenderSequenceAnalysis/do_files/log_files
 > /02_sequence_setup_2017.08.23.log
   log type:  text
- opened on:  23 Aug 2017, 10:12:32
+ opened on:  23 Aug 2017, 10:16:06
 
 . use ../data/generated_data_files/extract.dta;
 
@@ -23,29 +23,37 @@
 > & activity<070000) | activity==160103 | (activity>=180500 & activity<180600) 
 > | (activity>=180600 & activity<180700);
 
-.  local workedu_label "Paid Work & Education";
+.  local workedu_label Paid Work & Education;
 
 . local hwork_codes (activity>=020100 & activity<030000) | (activity>=080200 & 
 > activity<080300) | (activity>=080700 & activity<080800) | (activity>=090100 &
 >  activity<100000) | inlist(activity,70101,180701,180904,180807,180903,080699,
 > 160106) ;
 
-.  local hwork_label "Household work";
+.  local hwork_label Household work;
+
+. local dailyhswk_codes (activity>=020100 & activity<030000) ;
+
+.  local dailyhswk_label Cooking/Cleaing/Laundry;
 
 . /*2. now flag activities as belonging to one of each group of activities*/
 > 
-> foreach x in workedu hwork {;
+> foreach x in workedu hwork dailyhswk {;
   2.         gen `x'=0;
   3.                 replace `x'=1 if ``x'_codes';
   4.                 label var `x' "``x'_label'";
   5.                         egen `x'sum=total(duration) if `x'==1, by(caseid);
   6.                 replace `x'sum=0 if `x'==.;
-  7.         };
+  7.                 label var `x'sum "``x'_label' time";
+  8.         };
 (16,688 real changes made)
 (190525 missing values generated)
 (0 real changes made)
 (37,112 real changes made)
 (170101 missing values generated)
+(0 real changes made)
+(31,874 real changes made)
+(175339 missing values generated)
 (0 real changes made)
 
 . /*3. check to make sure that the sum of all activities is 1440*/
@@ -61,5 +69,5 @@
        log:  /pkg/time-use/GitHub/ATUSGenderSequenceAnalysis/do_files/log_files
 > /02_sequence_setup_2017.08.23.log
   log type:  text
- closed on:  23 Aug 2017, 10:12:34
+ closed on:  23 Aug 2017, 10:16:07
 -------------------------------------------------------------------------------

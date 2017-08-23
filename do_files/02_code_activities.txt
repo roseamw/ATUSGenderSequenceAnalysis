@@ -23,17 +23,19 @@ Self Care (sleep, eating, grooming)
 
 /*Paid Work & Education -- and related travel*/
 local workedu_codes (activity>=050100 & activity<060000) | (activity>=060100 & activity<070000) | activity==160103 | (activity>=180500 & activity<180600) | (activity>=180600 & activity<180700); 
-local workedu_label "Paid Work & Education";
+local workedu_label Paid Work & Education;
 
 local hwork_codes (activity>=020100 & activity<030000) | (activity>=080200 & activity<080300) | (activity>=080700 & activity<080800) | (activity>=090100 & activity<100000) | inlist(activity,70101,180701,180904,180807,180903,080699,160106) ; 
-local hwork_label "Household work";
+local hwork_label Household work;
 
+local dailyhswk_codes (activity>=020100 & activity<030000) ; 
+local dailyhswk_label Cooking/Cleaing/Laundry;
 
 
 
 /*2. now flag activities as belonging to one of each group of activities*/
 
-foreach x in workedu hwork {;
+foreach x in workedu hwork dailyhswk {;
 	gen `x'=0;
 		replace `x'=1 if ``x'_codes';
 
@@ -41,6 +43,9 @@ foreach x in workedu hwork {;
 		
 	egen `x'sum=total(duration) if `x'==1, by(caseid);
 		replace `x'sum=0 if `x'==.;
+
+		label var `x'sum "``x'_label' time";
+
 	};
 
 
