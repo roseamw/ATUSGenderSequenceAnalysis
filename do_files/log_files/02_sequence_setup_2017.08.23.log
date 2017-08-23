@@ -3,7 +3,7 @@
        log:  /pkg/time-use/GitHub/ATUSGenderSequenceAnalysis/do_files/log_files
 > /02_sequence_setup_2017.08.23.log
   log type:  text
- opened on:  23 Aug 2017, 10:16:06
+ opened on:  23 Aug 2017, 10:26:06
 
 . use ../data/generated_data_files/extract.dta;
 
@@ -32,13 +32,19 @@
 
 .  local hwork_label Household work;
 
-. local dailyhswk_codes (activity>=020100 & activity<030000) ;
+. local dailyhswk_codes (activity>=020100 & activity<030000);
 
 .  local dailyhswk_label Cooking/Cleaing/Laundry;
 
+. local elsehswk_codes (activity>=080200 & activity<080300) | (activity>=080700
+>  & activity<080800) | (activity>=090100 & activity<100000) | inlist(activity,
+> 70101,180701,180904,180807,180903,080699,160106) ;
+
+.  local elsehswk_label Housework NOT cooking/cleaning/laundry;
+
 . /*2. now flag activities as belonging to one of each group of activities*/
 > 
-> foreach x in workedu hwork dailyhswk {;
+> foreach x in workedu hwork dailyhswk elsehswk {;
   2.         gen `x'=0;
   3.                 replace `x'=1 if ``x'_codes';
   4.                 label var `x' "``x'_label'";
@@ -55,6 +61,9 @@
 (31,874 real changes made)
 (175339 missing values generated)
 (0 real changes made)
+(5,238 real changes made)
+(201975 missing values generated)
+(0 real changes made)
 
 . /*3. check to make sure that the sum of all activities is 1440*/
 > 
@@ -64,10 +73,18 @@
 > ategories are the equivalent of the full hwork category
 > */
 > 
+> disp "Running tests";
+Running tests
+
+. quietly {;
+ALL GOOD with dailyhswk+elsehswk==hwork
+
+.  //end quietly
+> 
 > log close;
       name:  <unnamed>
        log:  /pkg/time-use/GitHub/ATUSGenderSequenceAnalysis/do_files/log_files
 > /02_sequence_setup_2017.08.23.log
   log type:  text
- closed on:  23 Aug 2017, 10:16:07
+ closed on:  23 Aug 2017, 10:26:07
 -------------------------------------------------------------------------------

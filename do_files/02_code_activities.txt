@@ -28,14 +28,18 @@ local workedu_label Paid Work & Education;
 local hwork_codes (activity>=020100 & activity<030000) | (activity>=080200 & activity<080300) | (activity>=080700 & activity<080800) | (activity>=090100 & activity<100000) | inlist(activity,70101,180701,180904,180807,180903,080699,160106) ; 
 local hwork_label Household work;
 
-local dailyhswk_codes (activity>=020100 & activity<030000) ; 
-local dailyhswk_label Cooking/Cleaing/Laundry;
+	local dailyhswk_codes (activity>=020100 & activity<030000); 
+	local dailyhswk_label Cooking/Cleaing/Laundry;
+
+	local elsehswk_codes (activity>=080200 & activity<080300) | (activity>=080700 & activity<080800) | (activity>=090100 & activity<100000) | inlist(activity,70101,180701,180904,180807,180903,080699,160106) ; 
+	local elsehswk_label Housework NOT cooking/cleaning/laundry;
+
 
 
 
 /*2. now flag activities as belonging to one of each group of activities*/
 
-foreach x in workedu hwork dailyhswk {;
+foreach x in workedu hwork dailyhswk elsehswk {;
 	gen `x'=0;
 		replace `x'=1 if ``x'_codes';
 
@@ -45,7 +49,6 @@ foreach x in workedu hwork dailyhswk {;
 		replace `x'sum=0 if `x'==.;
 
 		label var `x'sum "``x'_label' time";
-
 	};
 
 
@@ -56,6 +59,22 @@ foreach x in workedu hwork dailyhswk {;
 /*1. thinking some sort of assert statement here with a message that gets displayed if the assert succeeds or fails
 2. we can also build in a check to make sure that the sum of detailed hwork categories are the equivalent of the full hwork category
 */
+
+disp "Running tests";
+quietly {;
+	local test1 dailyhswk+elsehswk==hwork;
+
+	foreach x in 1 {;
+		cap assert `test`x''; 
+		if !_rc {;
+			noisily disp "ALL GOOD with `test`x''";
+			};
+		if _rc {;
+			noisily disp "SOMETHING IS WRONG with `test`x''!";
+			};
+		}; //end foreach
+		
+	}; //end quietly
 
 log close;
 
