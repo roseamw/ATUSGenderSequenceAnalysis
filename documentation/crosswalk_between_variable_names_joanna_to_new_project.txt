@@ -1,0 +1,11 @@
+This is a crosswalk between the names Joanna assigned in sequences_1_measures_v1.do and the names we are assigning in 02_code_activities.txt. SF did a little rationalization as part of the tranlsation process.
+
+Joanna		New
+WORKEDU		WORKEDU		Work & Education
+HWORK		HWORK		All Housework
+DAILYHSWK	DAILYHSWK	Cooking/Cleaing/Laundry
+ELSEHSWK	ELSEHSWK	Housework NOT cooking/cleaning/laundry
+ALLCCARE	ALLCCARE	Childcare + Services
+CAREWORK	ALLCARE		Childcare & Eldercare				***CHANGE
+DAILYCARE	HHCARE		HH member care					***CHANGE
+DEVLPCARE	DEVLPCARE	Developmental Child Care

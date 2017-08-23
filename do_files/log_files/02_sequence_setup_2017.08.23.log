@@ -3,7 +3,7 @@
        log:  /pkg/time-use/GitHub/ATUSGenderSequenceAnalysis/do_files/log_files
 > /02_sequence_setup_2017.08.23.log
   log type:  text
- opened on:  23 Aug 2017, 10:26:06
+ opened on:  23 Aug 2017, 10:52:26
 
 . use ../data/generated_data_files/extract.dta;
 
@@ -32,19 +32,40 @@
 
 .  local hwork_label Household work;
 
-. local dailyhswk_codes (activity>=020100 & activity<030000);
+.         local dailyhswk_codes (activity>=020100 & activity<030000);
 
-.  local dailyhswk_label Cooking/Cleaing/Laundry;
+.         local dailyhswk_label Cooking/Cleaing/Laundry;
 
-. local elsehswk_codes (activity>=080200 & activity<080300) | (activity>=080700
->  & activity<080800) | (activity>=090100 & activity<100000) | inlist(activity,
-> 70101,180701,180904,180807,180903,080699,160106) ;
+.         local elsehswk_codes (activity>=080200 & activity<080300) | (activity
+> >=080700 & activity<080800) | (activity>=090100 & activity<100000) | inlist(a
+> ctivity,70101,180701,180904,180807,180903,080699,160106) ;
 
-.  local elsehswk_label Housework NOT cooking/cleaning/laundry;
+.         local elsehswk_label Housework NOT cooking/cleaning/laundry;
+
+. local allcare_codes (activity>=030100 & activity<040000) | (activity>=080100 
+> & activity<080200) | (activity>=180300 & activity<180400);
+
+.  local allcare_label Childcare & Eldercare;
+
+. local allccare_codes (activity>=030100 & activity<030400) | (activity>=080100
+>  & activity<080200);
+
+.  local ccare_label Childcare + Svcs;
+
+. local hhcare_codes (activity>=030108 & activity<030600) | activity==030101;
+
+.  local hhcare_label HH member care (no svcs);
+
+. local devlpcare_codes (activity>=030102 & activity<030107) | (activity>=03020
+> 1 & activity<=030203) | (activity>=080100 & activity<080200) | (activity>=180
+> 301 & activity<=180400) | inlist(activity,039999);
+
+.  local devlpcare_label Developmental Child Care;
 
 . /*2. now flag activities as belonging to one of each group of activities*/
 > 
-> foreach x in workedu hwork dailyhswk elsehswk {;
+> foreach x in workedu hwork dailyhswk elsehswk allccare allcare hhcare devlpca
+> re {;
   2.         gen `x'=0;
   3.                 replace `x'=1 if ``x'_codes';
   4.                 label var `x' "``x'_label'";
@@ -63,6 +84,18 @@
 (0 real changes made)
 (5,238 real changes made)
 (201975 missing values generated)
+(0 real changes made)
+(10,325 real changes made)
+(196888 missing values generated)
+(0 real changes made)
+(14,725 real changes made)
+(192488 missing values generated)
+(0 real changes made)
+(9,180 real changes made)
+(198033 missing values generated)
+(0 real changes made)
+(6,010 real changes made)
+(201203 missing values generated)
 (0 real changes made)
 
 . /*3. check to make sure that the sum of all activities is 1440*/
@@ -86,5 +119,5 @@ ALL GOOD with dailyhswk+elsehswk==hwork
        log:  /pkg/time-use/GitHub/ATUSGenderSequenceAnalysis/do_files/log_files
 > /02_sequence_setup_2017.08.23.log
   log type:  text
- closed on:  23 Aug 2017, 10:26:07
+ closed on:  23 Aug 2017, 10:52:29
 -------------------------------------------------------------------------------

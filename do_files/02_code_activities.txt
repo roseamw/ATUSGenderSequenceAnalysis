@@ -34,12 +34,22 @@ local hwork_label Household work;
 	local elsehswk_codes (activity>=080200 & activity<080300) | (activity>=080700 & activity<080800) | (activity>=090100 & activity<100000) | inlist(activity,70101,180701,180904,180807,180903,080699,160106) ; 
 	local elsehswk_label Housework NOT cooking/cleaning/laundry;
 
+local allcare_codes (activity>=030100 & activity<040000) | (activity>=080100 & activity<080200) | (activity>=180300 & activity<180400); 
+local allcare_label Childcare & Eldercare;
 
+local allccare_codes (activity>=030100 & activity<030400) | (activity>=080100 & activity<080200); 
+local ccare_label Childcare + Svcs;
+
+local hhcare_codes (activity>=030108 & activity<030600) | activity==030101; 
+local hhcare_label HH member care (no svcs);
+
+local devlpcare_codes (activity>=030102 & activity<030107) | (activity>=030201 & activity<=030203) | (activity>=080100 & activity<080200) | (activity>=180301 & activity<=180400) | inlist(activity,039999); 
+local devlpcare_label Developmental Child Care;
 
 
 /*2. now flag activities as belonging to one of each group of activities*/
 
-foreach x in workedu hwork dailyhswk elsehswk {;
+foreach x in workedu hwork dailyhswk elsehswk allccare allcare hhcare devlpcare {;
 	gen `x'=0;
 		replace `x'=1 if ``x'_codes';
 
