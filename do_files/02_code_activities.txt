@@ -11,19 +11,29 @@ use ../data/generated_data_files/extract.dta;
 
 
 
-/*1. here we're going to group activities together in local macros that we can use later*/
+/*1. here we're going to group activities together in local macros that we can use later
+
+Groups are:
+
+Paid Work & Education
+Household Work (Housework, Shopping/Services)
+Care Work (Child Care, Elder Care)
+Self Care (sleep, eating, grooming)
+*/
 
 /*Paid Work & Education -- and related travel*/
 local workedu_codes (activity>=050100 & activity<060000) | (activity>=060100 & activity<070000) | activity==160103 | (activity>=180500 & activity<180600) | (activity>=180600 & activity<180700); 
 local workedu_label "Paid Work & Education";
 
+local hwork_codes (activity>=020100 & activity<030000) | (activity>=080200 & activity<080300) | (activity>=080700 & activity<080800) | (activity>=090100 & activity<100000) | inlist(activity,70101,180701,180904,180807,180903,080699,160106) ; 
+local hwork_label "Household work";
 
 
 
 
 /*2. now flag activities as belonging to one of each group of activities*/
 
-foreach x in workedu {;
+foreach x in workedu hwork {;
 	gen `x'=0;
 		replace `x'=1 if ``x'_codes';
 
