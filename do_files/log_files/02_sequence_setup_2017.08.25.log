@@ -1,0 +1,194 @@
+-------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\do_files\log_fil
+> es/02_sequence_setup_2017.08.25.log
+  log type:  text
+ opened on:  25 Aug 2017, 08:43:01
+
+. use ../data/generated_data_files/extract.dta;
+
+. /*1. here we're going to group activities together in local macros that we can use later
+> 
+> Groups are:
+> 
+> Paid Work & Education
+> Household Work (Housework, Shopping/Services)
+> Care Work (Child Care, Elder Care)
+> Self Care (sleep, eating, grooming)
+> */
+> 
+> /*Paid Work & Education -- and related travel*/
+> local workedu_codes (activity>=050100 & activity<060000) | (activity>=060100 & activity<0
+> 70000) | activity==160103 | (activity>=180500 & activity<180600) | (activity>=180600 & ac
+> tivity<180700);
+
+.  local workedu_label Paid Work & Education;
+
+. local hwork_codes (activity>=020100 & activity<030000) | (activity>=080200 & activity<080
+> 300) | (activity>=080700 & activity<080800) | (activity>=090100 & activity<100000) | inli
+> st(activity,70101,180701,180904,180807,180903,080699,160106) ;
+
+.  local hwork_label Household work;
+
+.         local dailyhswk_codes (activity>=020100 & activity<030000);
+
+.         local dailyhswk_label Cooking/Cleaning/Laundry;
+
+.         local elsehswk_codes (activity>=080200 & activity<080300) | (activity>=080700 & a
+> ctivity<080800) | (activity>=090100 & activity<100000) | inlist(activity,70101,180701,180
+> 904,180807,180903,080699,160106) ;
+
+.         local elsehswk_label Housework NOT cooking/cleaning/laundry;
+
+. local allcare_codes (activity>=030100 & activity<040000) | (activity>=080100 & activity<0
+> 80200) | (activity>=180300 & activity<180400);
+
+.  local allcare_label Childcare & Eldercare;
+
+. local allccare_codes (activity>=030100 & activity<030400) | (activity>=080100 & activity<
+> 080200);
+
+.  local ccare_label Childcare + Svcs;
+
+. local hhcare_codes (activity>=030108 & activity<030600) | activity==030101;
+
+.  local hhcare_label HH member care (no svcs);
+
+. local devlpcare_codes (activity>=030102 & activity<030107) | (activity>=030201 & activity
+> <=030203) | (activity>=080100 & activity<080200) | (activity>=180301 & activity<=180400) 
+> | inlist(activity,039999);
+
+.  local devlpcare_label Developmental Child Care;
+
+. local sleep_codes (activity>=010100 & activity<010200);
+
+.  local sleep_label Sleeping;
+
+. local eating_codes (activity>=110000 & activity<120000) | inlist(activity,181101,181199);
+
+.  local eating_label Eating;
+
+. local selfcare_codes (activity>=010100 & activity<020000) | (activity>=080500 & activity<
+> 080600) | inlist(activity,181101,181199);
+
+.  local selfcare_label Sleep & Grooming;
+
+. local socleis_codes (activity>=120100 & activity<120300) | (activity>=120400 & activity<1
+> 20600) | (activity>=130202 & activity<130300) | inlist(activity,130302,130402);
+
+.  local socleis_label Social Leisure;
+
+. local passleis_codes (activity>=120300 & activity<120307)| inlist(activity,120503,120308,
+> 120399);
+
+.  local passleis_label Passive Leisure;
+
+. local passtele_codes inlist(activity,120303,120304);
+
+.  local passtele_label Passive Television;
+
+. local passnotv_codes inlist(activity,120301,120302,120305,120306,120308,120399,120503);
+
+.  local passnotv_label Passive No TV;
+
+. local actleis_codes (activity>=120309 & activity<120313) | (activity>=130101 & activity<1
+> 30200) | inlist(activity,120307,130201,130301,130401,130499);
+
+.  local actleis_label Active Leisure;
+
+. local allleis_codes (activity>=120100 & activity<130000) | (activity>=130100 & activity<1
+> 40000);
+
+.  local allleis_label All Leisure;
+
+. local cogleis_codes (activity>=060100 & activity<070000) | (activity>=120309 & activity<1
+> 20313) | (activity>=180601 & activity<180700) | inlist(activity,181204);
+
+.  local cogleis_label Cognitive Leisure;
+
+. local notleis_codes (activity<120000 | activity>=140000);
+
+. local notleis_label Not Leisure;
+
+. local shop_codes (activity>070100 & activity<080000) | (activity>=080501 & activit<080600
+> );
+
+. local shop_label Shopping;
+
+. /*2. now flag activities as belonging to one of each group of activities*/
+> 
+> foreach x in workedu hwork dailyhswk elsehswk allccare allcare hhcare devlpcare sleep eat
+> ing selfcare socleis passleis passtele passnotv actleis allleis notleis cogleis shop {;
+  2.         gen `x'=0;
+  3.                 replace `x'=duration if ``x'_codes';
+  4.                 label var `x' "``x'_label'";
+  5.                         egen `x'sum=sum(`x'), by(caseid);
+  6.                 replace `x'sum=0 if `x'sum==.;
+  7.                 label var `x'sum "``x'_label' time";
+  8.         };
+(16,688 real changes made)
+(0 real changes made)
+(37,112 real changes made)
+(0 real changes made)
+(31,874 real changes made)
+(0 real changes made)
+(5,238 real changes made)
+(0 real changes made)
+(10,325 real changes made)
+(0 real changes made)
+(14,725 real changes made)
+(0 real changes made)
+(9,180 real changes made)
+(0 real changes made)
+(6,010 real changes made)
+(0 real changes made)
+(23,025 real changes made)
+(0 real changes made)
+(24,575 real changes made)
+(0 real changes made)
+(43,175 real changes made)
+(0 real changes made)
+(6,656 real changes made)
+(0 real changes made)
+(21,720 real changes made)
+(0 real changes made)
+(16,644 real changes made)
+(0 real changes made)
+(5,076 real changes made)
+(0 real changes made)
+(7,785 real changes made)
+(0 real changes made)
+(36,196 real changes made)
+(0 real changes made)
+(171,017 real changes made)
+(0 real changes made)
+(5,809 real changes made)
+(0 real changes made)
+(7,321 real changes made)
+(0 real changes made)
+
+. /*3. check to make sure that the sum of all activities is 1440*/
+> 
+> /*1. thinking some sort of assert statement here with a message that gets displayed if th
+> e assert succeeds or fails
+> 2. we can also build in a check to make sure that the sum of detailed hwork categories ar
+> e the equivalent of the full hwork category
+> */
+> 
+> disp "Running tests";
+Running tests
+
+. quietly {;
+ALL GOOD with dailyhswksum+elsehswksum==hworksum
+ALL GOOD with passtelesum+passnotvsum==passleissum
+ALL GOOD with allleissum+notleissum==1440
+
+.  //end quietly
+> 
+> log close;
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\do_files\log_fil
+> es/02_sequence_setup_2017.08.25.log
+  log type:  text
+ closed on:  25 Aug 2017, 08:43:09
+-------------------------------------------------------------------------------------------

@@ -6,14 +6,44 @@ local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
 
 log using log_files/01_run_extract_`logdate'.log, t replace;
 
+local run_setting quietly;
+
+`run_setting' {;
 cd ../data/atus_extracts;
-shell gzip -d atus_00508.dat.gz;
-do atus_00508;
 
-sort caseid actline;
+/*1. check to see if the unzipped data file exists*/
+cap confirm file atus_00508.dat;
 
-save ../data/generated_data_files/extract.dta, replace;
+/*1a. if the file exists, convert to stata format*/
+if !_rc {;
+	noisily disp "Running ATUS-X extract...";
+	qui do atus_00508.do;
 
-cd ../do_files;
+	sort caseid actline;
 
+	/*2. Make sure the directory where we want to save the data file exists*/
+	cap confirm file ../generated_data_files/nul;
+
+	/*2a. If it doesn't,  then create it.*/
+	if _rc {;
+		cd ..;
+		shell mkdir generated_data_files;
+		cd generated_data_files;
+		};
+	/*2b. If it does exist, just change directories so we can save data file in the correct place.*/
+	else {;
+		cd ../generated_data_files;
+		};
+		
+	save extract.dta, replace;
+	noisily disp "File successfully created!";
+	};
+
+/*1b. if the file does not exist, throw an error with recommended next steps*/
+else {;
+	noisily disp as error "!!!!!WARNING!!!!!: ATUS-X extract atus_00508.dat is missing! Unzip .gz file and run this do file again.";
+	};
+
+cd ../../do_files;
+};
 log close;

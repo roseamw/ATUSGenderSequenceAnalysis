@@ -29,7 +29,7 @@ local hwork_codes (activity>=020100 & activity<030000) | (activity>=080200 & act
 local hwork_label Household work;
 
 	local dailyhswk_codes (activity>=020100 & activity<030000); 
-	local dailyhswk_label Cooking/Cleaing/Laundry;
+	local dailyhswk_label Cooking/Cleaning/Laundry;
 
 	local elsehswk_codes (activity>=080200 & activity<080300) | (activity>=080700 & activity<080800) | (activity>=090100 & activity<100000) | inlist(activity,70101,180701,180904,180807,180903,080699,160106) ; 
 	local elsehswk_label Housework NOT cooking/cleaning/laundry;
@@ -46,17 +46,53 @@ local hhcare_label HH member care (no svcs);
 local devlpcare_codes (activity>=030102 & activity<030107) | (activity>=030201 & activity<=030203) | (activity>=080100 & activity<080200) | (activity>=180301 & activity<=180400) | inlist(activity,039999); 
 local devlpcare_label Developmental Child Care;
 
+local sleep_codes (activity>=010100 & activity<010200); 
+local sleep_label Sleeping;
+
+local eating_codes (activity>=110000 & activity<120000) | inlist(activity,181101,181199); 
+local eating_label Eating;
+
+local selfcare_codes (activity>=010100 & activity<020000) | (activity>=080500 & activity<080600) | inlist(activity,181101,181199); 
+local selfcare_label Sleep & Grooming;
+
+local socleis_codes (activity>=120100 & activity<120300) | (activity>=120400 & activity<120600) | (activity>=130202 & activity<130300) | inlist(activity,130302,130402); 
+local socleis_label Social Leisure;
+
+local passleis_codes (activity>=120300 & activity<120307)| inlist(activity,120503,120308,120399); 
+local passleis_label Passive Leisure;
+
+local passtele_codes inlist(activity,120303,120304); 
+local passtele_label Passive Television;
+
+local passnotv_codes inlist(activity,120301,120302,120305,120306,120308,120399,120503); 
+local passnotv_label Passive No TV;
+
+local actleis_codes (activity>=120309 & activity<120313) | (activity>=130101 & activity<130200) | inlist(activity,120307,130201,130301,130401,130499); 
+local actleis_label Active Leisure;
+
+local allleis_codes (activity>=120100 & activity<130000) | (activity>=130100 & activity<140000); 
+local allleis_label All Leisure;
+
+local cogleis_codes (activity>=060100 & activity<070000) | (activity>=120309 & activity<120313) | (activity>=180601 & activity<180700) | inlist(activity,181204); 
+local cogleis_label Cognitive Leisure;
+
+local notleis_codes (activity<120000 | activity>=140000);
+local notleis_label Not Leisure;
+
+local shop_codes (activity>070100 & activity<080000) | (activity>=080501 & activit<080600);
+local shop_label Shopping;
+
 
 /*2. now flag activities as belonging to one of each group of activities*/
 
-foreach x in workedu hwork dailyhswk elsehswk allccare allcare hhcare devlpcare {;
+foreach x in workedu hwork dailyhswk elsehswk allccare allcare hhcare devlpcare sleep eating selfcare socleis passleis passtele passnotv actleis allleis notleis cogleis shop {;
 	gen `x'=0;
-		replace `x'=1 if ``x'_codes';
+		replace `x'=duration if ``x'_codes';
 
 		label var `x' "``x'_label'";
 		
-	egen `x'sum=total(duration) if `x'==1, by(caseid);
-		replace `x'sum=0 if `x'==.;
+	egen `x'sum=sum(`x'), by(caseid);
+		replace `x'sum=0 if `x'sum==.;
 
 		label var `x'sum "``x'_label' time";
 	};
@@ -72,415 +108,20 @@ foreach x in workedu hwork dailyhswk elsehswk allccare allcare hhcare devlpcare 
 
 disp "Running tests";
 quietly {;
-	local test1 dailyhswk+elsehswk==hwork;
+	local test1 dailyhswksum+elsehswksum==hworksum;
+	local test2 passtelesum+passnotvsum==passleissum;
+	local test3 allleissum+notleissum==1440;
 
-	foreach x in 1 {;
+	foreach x in 1 2 3 {;
 		cap assert `test`x''; 
 		if !_rc {;
-			noisily disp "ALL GOOD with `test`x''";
+			noisily disp as text "ALL GOOD with `test`x''";
 			};
 		if _rc {;
-			noisily disp "SOMETHING IS WRONG with `test`x''!";
+			noisily disp as red "SOMETHING IS WRONG with `test`x''!";
 			};
 		}; //end foreach
 		
 	}; //end quietly
 
 log close;
-
-
-
-/* this is Joanna's stuff that we need to reproduce*/
-/*
-********************************************************************************************************
-/*
-Paid Work & Education
-Household Work (Housework, Shopping/Services)
-Care Work (Child Care, Elder Care)
-Self Care (sleep, eating, grooming)
-
-We could include education with paid work, volunteering with child care (as form of carework) & 
-government services with household.
-*/
-
-**********************************************************************************************
-// PAID WORK
-cap drop 		workedu
-gen 			workedu=.
-foreach i in 		050101 	050102 	050103 	050189 	050201 	050202 	050203 	050204 	///
-					050289 	050301 	050302 	050303 	050304 	050389	050403 	050404 	///
-					050405 	050481 	050499 	059999	180501 	180502 	180589 			///
-					060101 	060102 	060103 	060104 	060199 	060201 	060202 	060203 	///
-					060289 	060301 	060302 	060303	060399 	060401	060402 	060403	///
-					060499 	069999	160103 	180601 	180682 	180699	{
-	replace 	workedu=1 if trcode == `i'
- 	 }
-replace 		workedu=0 if workedu==.
-label var 		workedu "Paid Work & Education"
-tab 			workedu, m
-
-*checking to see if it matches Marital Status Summary Variables
-cap drop		worksum
-egen			worksum 	= total(tuactdur24) if workedu==1, by(tucaseid)
-replace			worksum		= 0 if worksum==.
-
-preserve
-collapse (max)worksum, by(tucaseid)
-sum worksum
-restore
-
-**********************************************************************************************
-***HOUSEWORK***
-cap drop 		housework
-gen 			housework=.
-foreach i in 	020101 	020102 	020103 	020104 	020199							///
-				020201 	020202 	020203 	020299									///
-				070101 	180701													///
-				020301 	020302 	020303 	020399									///
-				020401 	020402 	020499 											///
-				020501 	020502 	020599 	180904									///
-				020681 	020699 	180807 	180903									///
-				020701 	020799 	020801 	020899									///
-				020901 	020902 	020903 	020904 	020905 	020999					///
-				029999															///
-				080201 	080202 	080203 	080299									///
-				080701 	080702 	080799 	080699 									///
-				090101 	090102 	090103 	090104 	090199							///
-				090201 	090202 	090299 	090301 	090302 	090399 	090401 			///
-				090402 	090499	090501 	090502 	090599 	099999 	160106			{
-	replace 	housework=1 if trcode == `i'
- 	 }
-replace 		housework=0 if housework==.
-label var 		housework "Household work"
-tab 			housework, m
-
-// Creating sub-hswrk variable with cooking/cleaning/laundry
-cap drop		dailyhswk
-gen				dailyhswk=.
-foreach i in	020101	020102	020201	020202	020203	020299					{
-	replace		dailyhswk=1 if trcode== `i'
-	}
-replace			dailyhswk=0 if dailyhswk==.
-label var		dailyhswk "Cooking/Cleaing/Laundry"
-
-// Creating sub-hswrk variable with all other housework
-cap drop 		elsehswk
-gen 			elsehswk=.
-foreach i in 	020103 	020104 	020199											///
-				070101 	180701													///
-				020301 	020302 	020303 	020399									///
-				020401 	020402 	020499 											///
-				020501 	020502 	020599 	180904									///
-				020681 	020699 	180807 	180903									///
-				020701 	020799 	020801 	020899									///
-				020901 	020902 	020903 	020904 	020905 	020999					///
-				029999															///
-				080201 	080202 	080203 	080299									///
-				080701 	080702 	080799 	080699 									///
-				090101 	090102 	090103 	090104 	090199							///
-				090201 	090202 	090299 	090301 	090302 	090399 	090401 			///
-				090402 	090499	090501 	090502 	090599 	099999 	160106			{
-	replace 	elsehswk=1 if trcode == `i'
- 	 }
-replace 		elsehswk=0 if elsehswk==.
-label var 		elsehswk "Housework NOT cooking/cleaning/laundry"
-	
-*checking to see if it matches Marital Status Summary Variables
-cap drop		hswksum
-egen			hswksum 	= total(tuactdur24) if housework==1, by(tucaseid)
-replace			hswksum		= 0 if hswksum==.
-
-preserve
-collapse (max)hswksum, by(tucaseid)
-sum hswksum
-restore
-
-**********************************************************************************************
-***CARE WORK***
-cap drop 	allccare
-gen 		allccare=.
-
-foreach i in 		030101 	030102 	030103 	030104 	030105	030108 	030109 	030110 	///
-					030111 	030112 	030199	030201 	030202 	030203 	030204 	030299 	///
-					030301 	030302 	030303 	030399 	030186							///
-					080101 	080102 	080199	{
-	replace 	allccare=1 if trcode == `i'
- 	 }
-replace 		allccare=0 if allccare==.
-label var 		allccare "Childcare"
-tab 			allccare, m
-
-*checking to see if it matches Marital Status Summary Variables (should match allccare)
-cap drop		ccaresum
-egen			ccaresum 	= total(tuactdur24) if allccare==1, by(tucaseid)
-replace			ccaresum	= 0 if ccaresum==.
-
-preserve
-collapse (max)ccaresum, by(tucaseid)
-sum ccaresum
-restore
-
-// ALL CAREWORK
-cap drop 		carework
-gen 			carework=.
-foreach i in 		030101 	030102 	030103 	030104 	030105	030108 	030109 	030110 	///
-					030111 	030112 	030199	030201 	030202 	030203 	030204 	030299 	///
-					030301 	030302 	030303 	030399 	030186	080101 	080102 	080199	///
-					030401 	030402 	030403 	030404 	030405 	030499 	030501 	030502 	///
-					030503 	030504 	030599											///
-					039999 	180381 	180382 	180399									{
-	replace 	carework=1 if trcode == `i'
- 	 }
-replace 		carework=0 if carework==.
-label var 		carework "Childcare & Eldercare"
-tab 			carework, m
-
-// DAILY CARE OF CHILDREN AND ADULT HH MEMBERS
-cap drop		dailycare
-gen 			dailycare=.
-foreach i in 		030101 	030108	030109	030110 	030111 	030112 	030199 	030204 	///
-					030299 	030301 	030302 	030303 	030399	030401	030402	030403	///
-					030404	030305	030499	030501	030502	030503	030504	030599	{
-	replace		dailycare=1 if trcode == `i'
-	}
-replace			dailycare=0 if dailycar==.
-label var		dailycare "Care of Kids/HHAdults"
-
-cap drop		devlpcare
-gen				devlpcare=.
-foreach i in		030102	030103 	030104 	030105	030201 	030202 	030203 	030186	///
-					080101 	080102 	080199	039999 	180381 	180382 	180399			{
-	replace		devlpcare=1 if trcode == `i'
-	}
-replace			devlpcare=0 if devlpcare==.
-label var		devlpcare "Developmental Child Care"
-
-**********************************************************************************************
-***SELF-CARE***
-cap drop		sleep
-gen				sleep=.
-foreach i in		010101 010102 010199 {
-	replace		sleep=1 if trcode== `i'
-	}
-	
-replace			sleep=0 if sleep==.
-label var		sleep "Sleeping"
-tab				sleep, m
-
-
-*checking to see if it matches Marital Status Summary Variables
-cap drop		sleepsum
-egen			sleepsum 	= total(tuactdur24) if sleep==1, by(tucaseid)
-replace			sleepsum	= 0 if sleepsum==.
-
-preserve
-collapse (max)sleepsum, by(tucaseid)
-sum sleepsum
-restore
-
-
-cap drop		eating
-gen				eating=.
-foreach i in		110101	110199	110281	110289	119999	181101	181199 {
-	replace		eating=1 if trcode==`i'
-	}
-
-replace			eating=0 if eating==.
-label var		eating "Eating"
-tab				eating, m
-
-
-cap drop 		selfcare
-gen 			selfcare=.
-foreach i in 		010101	010102	010199 											///
-					010201	010299	010301	010399	010401	010499	010501	010599	///
-					019999	080501 	080502 	080599 	180101 	180199	{
-	replace 	selfcare=1 if trcode == `i'
- 	 }
-replace 		selfcare=0 if selfcare==.
-label var 		selfcare "Sleep & Grooming"
-tab 			selfcare, m
-
-**********************************************************************************************
-// Leisure
-
-
-***Social leisure variables***
-cap drop	socleis
-gen			socleis=.
-foreach i in		120101 	120199 	120201 	120202 	120299 	120401 	120402 	120403 		///
-					120404	120405	120499	120501 	120502 	120504 	120599	130202		///
-					130203	130204	130205 	130206	130207	130208	130209 	130210 		///
-					130211	130212	130213 	130214 	130215 	130216 	130217 	130218		///
-					130219 	130220	130221 	130222 	130223	130224 	130225 	130226 		///
-					130227	130228	130229	130230 	130231 	130232	130299 	130302 		///
-					130402 {
-	replace	socleis=1 if trcode== `i'
-	}
-replace		socleis=0 if socleis==.
-label var	socleis "Social Leisure"
-tab			socleis, m
-
-*checking to see if it matches Marital Status Summary Variables
-cap drop		socleissum
-egen			socleissum 	= total(tuactdur24) if socleis==1, by(tucaseid)
-replace			socleissum	= 0 if socleissum==.
-
-preserve
-collapse (max)socleissum, by(tucaseid)
-sum socleissum
-restore
-
-
-
-***Passive leisure variables***
-cap drop	passleis
-gen			passleis=.
-foreach i in		120301 	120302 	120303 	120304 	120305 	120306 	120308 	120399 		///
-					120503 {
-	replace	passleis=1 if trcode== `i'
-	}
-replace		passleis=0 if passleis==.
-label var	passleis "Passive Leisure"
-tab			passleis, m
-
-// Create sub-pass leis -- tele only
-cap drop	tele
-gen			tele=.
-foreach i in		120303 120304	 {
-	replace	tele=1 if trcode== `i'
-	}
-replace		tele=0 if tele==.
-label var	tele "Television"
-tab			tele, m
-
-// Create sub-pass leis w/out tele
-cap drop	passnotv
-gen			passnotv=.
-foreach i in		120301 	120302 	120305 	120306 	120308 	120399 						///
-					120503 {
-	replace	passnotv=1 if trcode== `i'
-	}
-replace		passnotv=0 if passnotv==.
-label var	passnotv "Passive Leisure w/out TV"
-tab			passnotv, m
-
-
-*checking to see if it matches Marital Status Summary Variables
-cap drop		passleissum
-egen			passleissum 	= total(tuactdur24) if passleis==1, by(tucaseid)
-replace			passleissum	= 0 if passleissum==.
-
-preserve
-collapse (max)passleissum, by(tucaseid)
-sum passleissum
-restore
-
-
-***Acive leisure variables***
-cap drop	actleis
-gen			actleis=.
-foreach i in		120307 	120309 	120310 	120311 	120312 	120313 	130101 	130102 		///
-					130103	130104 	130105 	130106 	130107 	130108	130109	130110 		///
-					130111	130112	130113 	130114	130115 	130116 	130117 	130118 		///
-					130119 	130120	130121	130122 	130123	130124 	130125	130126 		///
-					130127	130128 	130129 	130130	130131 	130132 	130133 	130134		///
-					130135	130136 	130199 	130201	130301 	130401	130499 {
-	replace actleis=1 if trcode== `i'
-	}
-replace		actleis=0 if actleis==.
-tab 		actleis, m
-
-*checking to see if it matches Marital Status Summary Variables
-cap drop		actleissum
-egen			actleissum 	= total(tuactdur24) if actleis==1, by(tucaseid)
-replace			actleissum	= 0 if actleissum==.
-
-preserve
-collapse (max)actleissum, by(tucaseid)
-sum actleissum
-restore
-
-
-
-
-cap drop 	allleis
-gen 		allleis=.
-foreach i in 		120101 	120199  120201 	120202  120299  120301  120302 	120303 	///
-					120304 	120305 	120306 	120307 	120308 	120309 	120310  120311 	///
-					120312 	120313 	120399 	120401 	120402 	120403 	120404 	120405 	///
-					120499 	120501 	120502 	120503 	120504 	120599 	129999			///
-					130101 	130102 	130103 	130104 	130105 	130106 	130107 	130108 	///
-					130109 	130110 	130111 	130112 	130113 	130114 	130115 	130116 	///
-					130117 	130118 	130119 	130120 	130121 	130122 	130123 	130124 	///
-					130125 	130126 	130127 	130128 	130129 	130130 	130131 	130132 	///
-					130133 	130134 	130135 	130136 	130199 	130201 	130202 	130203 	///
-					130204 	130205 	130206 	130207 	130208 	130209 	130210 	130211 	///
-					130212 	130213 	130214 	130215 	130216 	130217 	130218 	130219 	///
-					130220 	130221 	130222 	130223 	130224 	130225 	130226 	130227 	///
-					130228 	130229 	130230 	130231 	130232 	130299 	130301 	130302 	///
-					130399 	130401	130402 	130499 	139999 {
- 	replace 	allleis=1 if trcode == `i'
- 	 }
-replace 		allleis=0 if allleis==.
-label var 		allleis "All Leisure activities"
-tab 			allleis, m
-
-
-cap drop 		notleis
-gen				notleis=0
-replace			notleis=1 if allleis==0
-label var 		notleis "Not Leisure activities"
-tab				notleis
-
-cap drop	cogleis
-gen			cogleis=.
-foreach i in		60102  60103  60104  60199  60201  60202  60203  60289  60302		///
-					60303  60399  60402  60403  60499  69999  120306 120307 120308		///
-					120309 120310 120311 120312 120313 180601 180682 180699 181204	 	{
-	replace	cogleis=1 if trcode== `i'
-	}
-replace		cogleis=0 if cogleis==.
-label var	cogleis "Cognitive Leisure"
-tab			cogleis, m
-
-/*
-120307 Playing games
-120308 Computer use for leisure (exc. Games)
-120309 Arts and crafts as a hobby
-120310 Collecting as a hobby
-120311 Hobbies, except arts & crafts and collecting
-120312 Reading for personal interest
-120313 Writing for personal interest
-*/
-
-**********************************************************************************************
-// Shopping/Personal Services
-
-cap drop	shop
-gen			shop=.
-foreach i in		070102	070103	070104	070105	070199	070201	070299	070301		///
-					070399	079999	080501	080502	080599								{
-	replace shop=1 if trcode== `i'
-	}
-replace		shop=0 if shop==.
-tab 		shop, m
-
-
-**********************************************************************************************
-**********************************************************************************************
-**********************************************************************************************
-
-cap drop		tulineno
-gen				tulineno=1
-
-cap drop		childu13
-gen				childu13=0
-replace			childu13=1 if tr_03cc57==1
-
-
-sort tucaseid 	tulineno
-
-save "ATUS_activities", replace
-
-*/

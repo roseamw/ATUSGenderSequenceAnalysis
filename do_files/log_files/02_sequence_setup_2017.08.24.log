@@ -1,0 +1,30 @@
+----------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\do_files\log_files/02_sequence_setup_2017.08.24.log
+  log type:  text
+ opened on:  24 Aug 2017, 16:53:38
+
+. use ../data/generated_data_files/extract.dta;
+file ../data/generated_data_files/extract.dta not found
+r(601);
+
+end of do-file
+
+r(601);
+
+. ls
+  <dir>   8/24/17 16:43  .                 
+  <dir>   8/24/17 16:43  ..                
+   0.1k   8/24/17 16:33  00_masterdo.txt   
+   0.3k   8/24/17 16:33  01_run_extract.txt
+  16.4k   8/24/17 16:52  02_code_activities.txt
+ 641.5k   8/24/17 16:33  activity_tt.xls   
+ 230.2k   8/24/17 16:42  lexiconnoex0316.pdf
+  <dir>   8/24/17 16:53  log_files         
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\do_files\log_files/02_sequence_setup_2017.08.24.log
+  log type:  text
+ closed on:  24 Aug 2017, 16:53:50
+----------------------------------------------------------------------------------------------------------------------------------------

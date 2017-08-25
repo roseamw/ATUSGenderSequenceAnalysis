@@ -1,0 +1,192 @@
+------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
+> Analysis\do_files\log_files/01_run_extract_2017.08.24.log
+  log type:  text
+ opened on:  24 Aug 2017, 17:33:50
+
+. cd ../data/atus_extracts;
+C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\data
+> \atus_extracts
+
+. cap confirm file atus_00508.dat.gz;
+
+. if _rc {;
+.         disp "ATUS-X extract atus_00508.dat.gz is missing!";
+.         };
+
+. if !_rc {;
+.         pwd;
+C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\data
+> \atus_extracts
+.         shell gzip -d atus_00508.dat.gz;
+.         cap confirm file atus_00580.dat;
+.         do atus_00508.do;
+
+. * NOTE: You need to set the Stata working directory to the path
+. * where the data file is located.
+. 
+. set more off
+
+. 
+. clear
+
+. quietly infix              ///
+>   double  caseid    1-14   ///
+>   long    year      15-19  ///
+>   byte    pernum    20-21  ///
+>   int     lineno    22-24  ///
+>   double  wt06      25-41  ///
+>   long    activity  42-47  ///
+>   int     duration  48-51  ///
+>   byte    actline   52-53  ///
+>   str     start     54-61  ///
+>   str     stop      62-69  ///
+>   using `"atus_00508.dat"'
+file atus_00508.dat not found
+r(601);
+
+end of do-file
+r(601);
+.         sort caseid actline;
+.         save ../data/generated_data_files/extract.dta, replace;
+.         };
+r(601);
+
+end of do-file
+
+r(601);
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. gzip -d atus_00508.dat.gz
+command gzip is unrecognized
+r(199);
+
+. gunzip -d atus_00508.dat.gz
+command gunzip is unrecognized
+r(199);
+
+. gzuse -d atus_00508.dat.gz
+command gzuse is unrecognized
+r(199);
+
+. shell gzip -d atus_00508.dat.gz
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. shell gunzip -d atus_00508.dat.gz
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. !gzip -d atus_00508.dat.gz
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. !!gzip -d atus_00508.dat.gz
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. ls
+  <dir>   8/24/17 17:09  .                 
+  <dir>   8/24/17 17:09  ..                
+2055.9k   8/24/17 16:55  atus_00508.dat.gz 
+  49.0k   8/24/17 16:33  atus_00508.do     
+   0.0k   8/24/17 16:33  this is where extracts go.txt
+
+. cd ../../do_files
+C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\do_f
+> iles
+
+. do 01_run_extract.txt
+
+. #delimit;
+delimiter now ;
+. clear;
+
+. set more off;
+
+. local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
+
+. log using log_files/01_run_extract_`logdate'.log, t replace;
+log file already open
+r(604);
+
+end of do-file
+
+r(604);
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
+> Analysis\do_files\log_files/01_run_extract_2017.08.24.log
+  log type:  text
+ closed on:  25 Aug 2017, 07:21:42
+------------------------------------------------------------------
