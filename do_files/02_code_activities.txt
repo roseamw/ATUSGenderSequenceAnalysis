@@ -82,10 +82,13 @@ local notleis_label Not Leisure;
 local shop_codes (activity>070100 & activity<080000) | (activity>=080501 & activit<080600);
 local shop_label Shopping;
 
+local other_codes selfcare==0 & eating==0 & workedu==0 & allcare==0 & hwork==0 & passleis==0;
+local shop_label Other;
+
 
 /*2. now flag activities as belonging to one of each group of activities*/
 
-foreach x in workedu hwork dailyhswk elsehswk allccare allcare hhcare devlpcare sleep eating selfcare socleis passleis passtele passnotv actleis allleis notleis cogleis shop {;
+foreach x in workedu hwork dailyhswk elsehswk allccare allcare hhcare devlpcare sleep eating selfcare socleis passleis passtele passnotv actleis allleis notleis cogleis shop other {;
 	gen `x'=0;
 		replace `x'=duration if ``x'_codes';
 
@@ -123,5 +126,41 @@ quietly {;
 		}; //end foreach
 		
 	}; //end quietly
+
+
+/*4. create one var.iable that contains codes for all major activities
+This parallels Joanna's variable ACTIVITY. We've already used that name, so call it ACTCAT.*/
+
+gen actcat=0;
+	replace actcat=1 if selfcare>0;
+	replace actcat=2 if eating>0;
+	replace actcat=3 if workedu>0;
+	replace actcat=4 if allcare>0;
+	replace actcat=5 if hwork>0;
+	replace actcat=6 if passleis>0;
+	replace actcat=7 if other>0;
+
+	label define actcatlbl 1 "Sleep/Self-Care" 2 "Eating" 3 "Work & Edu" 4 "Carework" 5 "Housework" 6 "Passive Leisure" 7 "Other";
+	label value actcat actcatlbl;
+	label var actcat "general aggregated activity categories";
+
+gen dactcat=0;
+	replace dactcat=1 if selfcare>0;
+	replace dactcat=2 if eating>0;
+	replace dactcat=3 if workedu>0;
+	replace dactcat=4 if hhcare>0;
+	replace dactcat=5 if devlpcare>0;
+	replace dactcat=6 if dailyhswk>0;
+	replace dactcat=7 if elsehswk>0;
+	replace dactcat=8 if passtele>0;
+	replace dactcat=9 if passnotv>0;
+	replace dactcat=10 if actleis>0;
+	replace dactcat=11 if socleis>0;
+	replace dactcat=12 if shop>0;
+	replace dactcat=13 if dactcat==0;
+
+	label define dactcatlbl 1 "Sleep/Self-Care" 2 "Eating" 3 "Work & Edu" 4 "Daily Carework" 5 "Devlp Care" 6 "Daily Hswk" 7 "Other Hswk" 8 "Television" 9 "Pass Leis" 10 "Active Leis" 11 "Social Leis" 12 "Shopping" 13 "Other";
+	label value dactcat dactcatlbl;
+	label var dactcat "detailed aggregated activity categories";
 
 log close;
