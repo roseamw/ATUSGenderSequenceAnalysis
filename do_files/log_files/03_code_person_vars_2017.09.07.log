@@ -1,0 +1,83 @@
+------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
+> Analysis\do_files\log_files/03_code_person_vars_2017.09.07.log
+  log type:  text
+ opened on:   7 Sep 2017, 18:38:49
+
+. use ../data/generated_data_files/extract_hp.dta;
+
+. /*note that Joanna does roster and CPS recodes separately. with 
+> ATUS-X we can do them all at once.*/
+> 
+> rename hh_size numterrp;
+
+. gen _spouse=(relate==20);
+
+. gen _umpartner=(relate==21);
+
+. gen _hhchild=(relate==22);
+
+. gen _hhchildu18=(relate==22 & age<18);
+
+. gen _hhchildo18=(relate==22 & age>=18);
+
+. gen _hhchildu13=(relate==22 & age<13);
+
+. gen _grandchild=(relate==23);
+
+. gen _grandchildu18=(relate==23 & age<18);
+
+. gen _grandchildo18=(relate==23 & age>=18);
+
+. gen _parent=(relate==24);
+
+. gen _sibling=(relate==25);
+
+. gen _siblingo18=(relate==25 & age>=18);
+
+. gen _otherrelative=(relate==26);
+
+. gen _foster=(relate==27);
+
+. gen _othernonrelative=(relate==30);
+
+. gen _notinhh=(relate==40);
+
+. gen _kidu2dum=(relate==22 & age<2);
+
+. gen _kid2to5=((relate==22 | relate==27) & (age>=2 | age<=5));
+
+. gen _exfamdum=(_hhchildo18==1 | _parent==1 | _siblingo18==1 | _o
+> therrelative==1);
+
+. foreach v in spouse umpartner hhchild hhchildu18 hhchildo18 hhch
+> ildu13 grandchild grandchildu18 grandchildo18 parent sibling sib
+> lingo18 otherrelative foster othernonrelative notinhh kidu2dum k
+> id2to5 exfamdum {;
+  2.         cap confirm var _`v';
+  3.         if _rc {;
+  4.                 disp "!!!!!`v' does not exist!!!!!";
+  5.                 };
+  6.         quietly egen `v'=max(_`v'), by(caseid);
+  7.         *drop _`v';
+.         };
+
+. /*respondent characteristics*/
+> gen refemale=(sex==2 & lineno==1);
+
+. gen rage=age if lineno==1;
+(17,391 missing values generated)
+
+. save ../data/generated_data_files/person_recodes.dta, replace;
+(note: file ../data/generated_data_files/person_recodes.dta not fo
+> und)
+file ../data/generated_data_files/person_recodes.dta saved
+
+. log close;
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
+> Analysis\do_files\log_files/03_code_person_vars_2017.09.07.log
+  log type:  text
+ closed on:   7 Sep 2017, 18:38:53
+------------------------------------------------------------------

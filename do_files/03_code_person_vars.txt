@@ -20,18 +20,29 @@ gen _hhchildo18=(relate==22 & age>=18);
 gen _hhchildu13=(relate==22 & age<13);
 gen _grandchild=(relate==23);
 gen _grandchildu18=(relate==23 & age<18);
-gen _grandchild018=(relate==23 & age>=18);
+gen _grandchildo18=(relate==23 & age>=18);
 gen _parent=(relate==24);
 gen _sibling=(relate==25);
 gen _siblingo18=(relate==25 & age>=18);
 gen _otherrelative=(relate==26);
 gen _foster=(relate==27);
-gen _othernonrelateive==(relate==30);
-gen _nothinhh=(relate==40);
+gen _othernonrelative=(relate==30);
+gen _notinhh=(relate==40);
 gen _kidu2dum=(relate==22 & age<2);
 gen _kid2to5=((relate==22 | relate==27) & (age>=2 | age<=5));
 
-gen exfamdum=(_hhchildo18==1 | _parent==1 | siblingo18==1 | _otherrelative==1);
+gen _exfamdum=(_hhchildo18==1 | _parent==1 | _siblingo18==1 | _otherrelative==1);
+
+
+foreach v in spouse umpartner hhchild hhchildu18 hhchildo18 hhchildu13 grandchild grandchildu18 grandchildo18 parent sibling siblingo18 otherrelative foster othernonrelative notinhh kidu2dum kid2to5 exfamdum {;
+	cap confirm var _`v';
+	if _rc {;
+		disp "!!!!!`v' does not exist!!!!!";
+		};
+	quietly egen `v'=max(_`v'), by(caseid);
+	*drop _`v';
+	};
+
 
 /*respondent characteristics*/
 gen refemale=(sex==2 & lineno==1);
@@ -41,6 +52,6 @@ gen rage=age if lineno==1;
 
 
 
-save data/generated_data_files/person_recodes.dta, replace;
+save ../data/generated_data_files/person_recodes.dta, replace;
 
 log close;
