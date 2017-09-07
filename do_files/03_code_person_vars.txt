@@ -48,6 +48,38 @@ foreach v in spouse umpartner hhchild hhchildu18 hhchildo18 hhchildu13 grandchil
 gen refemale=(sex==2 & lineno==1);
 gen rage=age if lineno==1;
 
+gen nevmar=(spousepres==3 & marst==6);
+gen separated=(spousepres==3 & marst==5);
+gen divorced=(spousepres==3 & marst==4);
+gen widowed=(spousepres==3 & marst==3);
+gen married=(spousepres==1);
+/*umpartner=1 is cohabiting*/
+
+egen marrmiss=rowmiss(nevmar separated divorced widowed married umpartner) if lineno==1;
+
+assert marrmiss==0 if lineno==1;
+if !_rc {;
+	drop marrmiss;
+	};
+
+gen marstat=0;
+	replace marstat=1 if married==1;
+	replace marstat=2 if nevmar==1;
+	replace marstat=3 if umpartner==1;
+	replace marstat=4 if divorced==1 | separated==1 | widowed==1;
+	replace marstat=. if lineno!=1;
+
+	label define marstatlbl 1 "Married" 2 "Never Married" 3 "cohabiting"  4 "divorced/sep/widowed", replace;
+	label values marstat marstatlbl;
+
+assert marstat!=0 if lineno==1;
+if _rc {;
+	tab marst spousepres if marstat==0;
+	};
+
+gen divsep=(divorced==1 | separated==1);
+
+
 
 
 

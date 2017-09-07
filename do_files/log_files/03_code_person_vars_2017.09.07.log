@@ -3,7 +3,7 @@
        log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
 > Analysis\do_files\log_files/03_code_person_vars_2017.09.07.log
   log type:  text
- opened on:   7 Sep 2017, 18:38:49
+ opened on:   7 Sep 2017, 18:49:40
 
 . use ../data/generated_data_files/extract_hp.dta;
 
@@ -69,15 +69,64 @@
 . gen rage=age if lineno==1;
 (17,391 missing values generated)
 
-. save ../data/generated_data_files/person_recodes.dta, replace;
-(note: file ../data/generated_data_files/person_recodes.dta not fo
-> und)
-file ../data/generated_data_files/person_recodes.dta saved
+. gen nevmar=(spousepres==3 & marst==6);
 
-. log close;
+. gen separated=(spousepres==3 & marst==5);
+
+. gen divorced=(spousepres==3 & marst==4);
+
+. gen widowed=(spousepres==3 & marst==3);
+
+. gen married=(spousepres==1);
+
+. /*umpartner=1 is cohabiting*/
+> 
+> egen marrmiss=rowmiss(nevmar separated divorced widowed married 
+> umpartner) if lineno==1;
+(17391 missing values generated)
+
+. assert marrmiss==0 if lineno==1;
+
+. if !_rc {;
+.         drop marrmiss;
+.         };
+
+. gen marstat=0;
+
+.         replace marstat=1 if married==1;
+(4,919 real changes made)
+
+.         replace marstat=2 if nevmar==1;
+(2,395 real changes made)
+
+.         replace marstat=3 if umpartner==1;
+(1,186 real changes made)
+
+.         replace marstat=4 if divorced==1 | separated==1 | widowe
+> d==1;
+(2,605 real changes made)
+
+.         replace marstat=. if lineno!=1;
+(17,391 real changes made, 17,391 to missing)
+
+.         label define marstatlbl 1 "Married" 2 "Never Married" 3 
+> "cohabiting"  4 "divorced/sep/widowed", replace;
+
+.         label values marstat marstatlbl;
+
+. assert marstat!=0 if lineno==1;
+190 contradictions in 10,493 observations
+assertion is false
+r(9);
+
+end of do-file
+
+r(9);
+
+. log close
       name:  <unnamed>
        log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
 > Analysis\do_files\log_files/03_code_person_vars_2017.09.07.log
   log type:  text
- closed on:   7 Sep 2017, 18:38:53
+ closed on:   7 Sep 2017, 18:49:47
 ------------------------------------------------------------------
