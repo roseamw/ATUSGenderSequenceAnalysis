@@ -7,17 +7,18 @@ local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
 log using log_files/01_run_extract_`logdate'.log, t replace;
 
 local run_setting quietly;
+local exnum 00508;
 
 `run_setting' {;
 cd ../data/atus_extracts;
 
 /*1. check to see if the unzipped data file exists*/
-cap confirm file atus_00508.dat;
+cap confirm file atus_`exnum'.dat;
 
 /*1a. if the file exists, convert to stata format*/
 if !_rc {;
 	noisily disp "Running ATUS-X extract...";
-	qui do atus_00508.do;
+	qui do atus_`exnum'.do;
 
 	sort caseid actline;
 
@@ -41,7 +42,7 @@ if !_rc {;
 
 /*1b. if the file does not exist, throw an error with recommended next steps*/
 else {;
-	noisily disp as error "!!!!!WARNING!!!!!: ATUS-X extract atus_00508.dat is missing! Unzip .gz file and run this do file again.";
+	noisily disp as error "!!!!!WARNING!!!!!: ATUS-X extract atus_`exnum'.dat is missing! Unzip .gz file and run this do file again.";
 	};
 
 cd ../../do_files;
