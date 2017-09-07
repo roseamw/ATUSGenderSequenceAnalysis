@@ -33,6 +33,9 @@ gen _kid2to5=((relate==22 | relate==27) & (age>=2 | age<=5));
 
 gen exfamdum=(_hhchildo18==1 | _parent==1 | siblingo18==1 | _otherrelative==1);
 
+/*respondent characteristics*/
+gen refemale=(sex==2 & lineno==1);
+gen rage=age if lineno==1;
 
 
 
