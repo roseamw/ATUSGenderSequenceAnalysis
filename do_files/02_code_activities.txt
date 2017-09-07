@@ -4,7 +4,7 @@ set more off;
 
 local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
 
-log using log_files/02_sequence_setup_`logdate'.log, t replace;
+log using log_files/02_code_activities_`logdate'.log, t replace;
 
 use ../data/generated_data_files/extract.dta;
 
