@@ -1,0 +1,15 @@
+#delimit;
+clear;
+set more off;
+
+local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
+
+log using log_files/03_code_person_vars_`logdate'.log, t replace;
+
+use ../data/generated_data_files/extract.dta;
+
+
+
+save data/generated_data_files/person_recodes.dta, replace;
+
+log close;
