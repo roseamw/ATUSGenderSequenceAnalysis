@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
+> Analysis\do_files\log_files/01_run_extract_2017.09.07.log
+  log type:  text
+ opened on:   7 Sep 2017, 18:30:21
+
+. local run_setting quietly;
+
+. local exnum 00520;
+
+. `run_setting' {;
+Running ATUS-X extract...
+File successfully created!
+
+. log close;
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
+> Analysis\do_files\log_files/01_run_extract_2017.09.07.log
+  log type:  text
+ closed on:   7 Sep 2017, 18:30:41
+------------------------------------------------------------------

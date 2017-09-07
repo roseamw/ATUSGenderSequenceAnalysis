@@ -6,7 +6,7 @@ local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
 
 log using log_files/03_code_person_vars_`logdate'.log, t replace;
 
-use ../data/generated_data_files/extract.dta;
+use ../data/generated_data_files/extract_hp.dta;
 
 /*note that Joanna does roster and CPS recodes separately. with ATUS-X we can do them all at once.*/
 

@@ -6,7 +6,7 @@ local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
 
 log using log_files/02_code_activities_`logdate'.log, t replace;
 
-use ../data/generated_data_files/extract.dta;
+use ../data/generated_data_files/extract_a.dta;
 
 
 
@@ -163,6 +163,6 @@ gen dactcat=0;
 	label value dactcat dactcatlbl;
 	label var dactcat "detailed aggregated activity categories";
 
-save data/generated_data_files/ATUS_activities.dta, replace;
+save ../data/generated_data_files/ATUS_activities.dta, replace;
 
 log close;

@@ -7,7 +7,7 @@ local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
 log using log_files/01_run_extract_`logdate'.log, t replace;
 
 local run_setting quietly;
-local exnum 00508;
+local exnum 00520;
 
 `run_setting' {;
 cd ../data/atus_extracts;
@@ -19,8 +19,6 @@ cap confirm file atus_`exnum'.dat;
 if !_rc {;
 	noisily disp "Running ATUS-X extract...";
 	qui do atus_`exnum'.do;
-
-	sort caseid actline;
 
 	/*2. Make sure the directory where we want to save the data file exists*/
 	cap confirm file ../generated_data_files/nul;
@@ -38,6 +36,55 @@ if !_rc {;
 		
 	save extract.dta, replace;
 	noisily disp "File successfully created!";
+	
+	/*2c. Now get hierarchical file in a usable format*/
+	keep if rectype==1;
+	
+	qui foreach v of var * {;
+		count if missing(`v');
+		if r(N) == _N drop `v';
+		};
+	
+	save extract_h, replace;
+	
+	clear;
+	use extract.dta;
+	keep if rectype==2;
+	
+	qui foreach v of var * {;
+		count if missing(`v');
+		if r(N) == _N drop `v';
+		};
+	
+	save extract_p, replace;
+	
+	clear;
+	use extract.dta;
+	keep if rectype==3;
+	
+	qui foreach v of var * {;
+		count if missing(`v');
+		if r(N) == _N drop `v';
+		};
+	
+	save extract_a, replace;
+	
+	clear;
+	use extract.dta;
+	keep if rectype==4;
+	
+	qui foreach v of var * {;
+		count if missing(`v');
+		if r(N) == _N drop `v';
+		};
+	
+	save extract_w, replace;
+	
+	clear;
+	use extract_p;
+	merge m:1 caseid using extract_h;
+	save extract_hp, replace;
+	
 	};
 
 /*1b. if the file does not exist, throw an error with recommended next steps*/
