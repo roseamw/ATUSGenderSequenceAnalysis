@@ -80,9 +80,30 @@ if _rc {;
 gen divsep=(divorced==1 | separated==1);
 
 
+gen raceethnicity=0;
+	replace raceethnicity=1 if race==100 & hispan==100;
+	replace raceethnicity=2 if race==110 & hispan==100;
+	replace raceethnicity=3 if race==131 & hispan==100;
+	replace raceethnicity=4 if hispan!=100;
+	replace raceethnicity=5 if (race==120 | race>=132) & hispan==100;
+
+	label define raceethnicity 1 "white" 2 "black" 3 "asian" 4 "hispanic" 5 "otherrace";
+	label values raceethnicity raceethnicity;
+
+assert raceethnicity!=0 if lineno==1;
+if _rc {;
+	tab race raceethnicity if raceentnicity==0;
+	};
+
+gen white=(raceethnicity==1);
+gen black=(raceethnicity==2);
+gen asian=(raceethnicity==3);
+gen hispanic=(raceethnicity==4);
+gen otherrace=(raceethnicity==5);
 
 
 
+numlabel, add;
 
 save ../data/generated_data_files/person_recodes.dta, replace;
 

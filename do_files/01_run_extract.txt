@@ -19,6 +19,7 @@ cap confirm file atus_`exnum'.dat;
 if !_rc {;
 	noisily disp "Running ATUS-X extract...";
 	qui do atus_`exnum'.do;
+	numlabel, add;
 
 	/*2. Make sure the directory where we want to save the data file exists*/
 	cap confirm file ../generated_data_files/nul;
