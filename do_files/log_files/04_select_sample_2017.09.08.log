@@ -3,7 +3,7 @@
        log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
 > Analysis\do_files\log_files/04_select_sample_2017.09.08.log
   log type:  text
- opened on:   8 Sep 2017, 17:47:24
+ opened on:   8 Sep 2017, 17:56:08
 
 . use ../data/generated_data_files/person_recodes.dta;
 
@@ -64,9 +64,34 @@
 . drop if nomiss==0;
 (0 observations deleted)
 
+. drop _merge;
+
+. merge 1:m caseid using ../data/generated_data_files/ATUS_activit
+> ies;
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                       140,614
+        from master                         0  (_merge==1)
+        from using                    140,614  (_merge==2)
+
+    matched                            66,599  (_merge==3)
+    -----------------------------------------
+
+. tab year _merge;
+
+    Survey |        _merge
+      year | 2. using   3. matche |     Total
+-----------+----------------------+----------
+      2016 |   140,614     66,599 |   207,213 
+-----------+----------------------+----------
+     Total |   140,614     66,599 |   207,213 
+
+
+. keep if _merge==3;
+(140,614 observations deleted)
+
 . save ../data/generated_data_files/sequences_0316.dta, replace;
-(note: file ../data/generated_data_files/sequences_0316.dta not fo
-> und)
 file ../data/generated_data_files/sequences_0316.dta saved
 
 . log close;
@@ -74,5 +99,5 @@ file ../data/generated_data_files/sequences_0316.dta saved
        log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
 > Analysis\do_files\log_files/04_select_sample_2017.09.08.log
   log type:  text
- closed on:   8 Sep 2017, 17:47:24
+ closed on:   8 Sep 2017, 17:56:09
 ------------------------------------------------------------------

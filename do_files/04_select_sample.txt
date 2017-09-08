@@ -25,27 +25,18 @@ drop if numberhhchild==0;
 count; 
 
 
-/*Random Sample of 500 Cases from 2016*/
-	/*
-	sort			tucaseid
-	preserve
-		tempfile 	tmp
-		bysort 		tucaseid: keep if _n == 1
-		sample 		500, count
-		sort 		tucaseid
-		save 		`tmp'
-	restore
-	merge 			m:1 tucaseid using `tmp'
-	keep if 		_merge == 3
-	drop 			_merge
-	*/
-
-
 mark nomiss;
 markout nomiss  female nevmar umpartner divsep exfamdum numberhhchild kidu2dum kid2to5 lths highschool somecol parttime black asian hispanic otherrace age weekend;
 tab nomiss;
 drop if nomiss==0;
 
+
+/*now merge activities back in*/
+drop _merge;
+merge 1:m caseid using ../data/generated_data_files/ATUS_activities;
+tab year _merge;
+keep if _merge==3;
+drop _merge;
 
 save ../data/generated_data_files/sequences_0316.dta, replace;
 

@@ -163,6 +163,8 @@ gen dactcat=0;
 	label value dactcat dactcatlbl;
 	label var dactcat "detailed aggregated activity categories";
 
+
+
 save ../data/generated_data_files/ATUS_activities.dta, replace;
 
 log close;
