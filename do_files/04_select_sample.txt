@@ -42,12 +42,12 @@ count;
 
 
 mark nomiss;
-markout nomiss  female nevmar unmarpartner divsep exfamdum numberhhchild kidu2dum kid2to5 lths highschool somecol parttime black asian hispanic otherrace age weekend;
+markout nomiss  female nevmar umpartner divsep exfamdum numberhhchild kidu2dum kid2to5 lths highschool somecol parttime black asian hispanic otherrace age weekend;
 tab nomiss;
 drop if nomiss==0;
 
 
-use ../data/generated_data_files/sequences_0316.dta;
+save ../data/generated_data_files/sequences_0316.dta, replace;
 
 
 log close;
