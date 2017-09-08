@@ -49,7 +49,7 @@ gen refemale=(sex==2 & lineno==1);
 gen rage=age if lineno==1;
 
 gen nevmar=(spousepres==3 & marst==6);
-gen separated=(spousepres==3 & marst==5);
+gen separated=(spousepres==3 & (marst==1 | marst==2 | marst==5));
 gen divorced=(spousepres==3 & marst==4);
 gen widowed=(spousepres==3 & marst==3);
 gen married=(spousepres==1);
