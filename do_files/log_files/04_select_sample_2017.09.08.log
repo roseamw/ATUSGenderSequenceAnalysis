@@ -1,0 +1,68 @@
+------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
+> Analysis\do_files\log_files/04_select_sample_2017.09.08.log
+  log type:  text
+ opened on:   8 Sep 2017, 17:45:45
+
+. use ../data/generated_data_files/person_recodes.dta;
+
+. count;
+  27,884
+
+. /*keep only ATUS respondents*/
+> keep if lineno==1;
+(17,391 observations deleted)
+
+. count;
+  10,493
+
+. /* Limit to employed people*/
+> drop if employ==2;
+(4,119 observations deleted)
+
+. count;
+  6,374
+
+. /*Limit to parents*/
+> drop if numberhhchild==0;
+(3,237 observations deleted)
+
+. count;
+  3,137
+
+.  /*Random Sample of 500 Cases from 2016*/
+>         /*
+>         sort                    tucaseid
+>         preserve
+>                 tempfile        tmp
+>                 bysort          tucaseid: keep if _n == 1
+>                 sample          500, count
+>                 sort            tucaseid
+>                 save            `tmp'
+>         restore
+>         merge                   m:1 tucaseid using `tmp'
+>         keep if                 _merge == 3
+>         drop                    _merge
+>         */
+> 
+> 
+> mark nomiss;
+
+. markout nomiss  female nevmar unmarpartner divsep exfamdum numbe
+> rhhchild kidu2dum kid2to5 lths highschool somecol parttime black
+>  asian hispanic otherrace age weekend;
+variable female not found
+r(111);
+
+end of do-file
+
+r(111);
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
+> Analysis\do_files\log_files/04_select_sample_2017.09.08.log
+  log type:  text
+ closed on:   8 Sep 2017, 17:45:47
+------------------------------------------------------------------

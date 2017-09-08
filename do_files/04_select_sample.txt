@@ -14,21 +14,18 @@ count;
 keep if lineno==1;
 count;
 
+
 /* Limit to employed people*/
 drop if employ==2;
 count;
 
+
 /*Limit to parents*/
 drop if numberhhchild==0;
+count; 
 
-/*
-// LIMIT Cases to 2016
-destring 		tucaseid, replace
-format			tucaseid %20.0g
-sort 			tucaseid
-keep if			tucaseid	> 20160000000000
 
-// Random Sample of 500 Cases from 2016
+/*Random Sample of 500 Cases from 2016*/
 	/*
 	sort			tucaseid
 	preserve
@@ -44,16 +41,13 @@ keep if			tucaseid	> 20160000000000
 	*/
 
 
-***Total # of CASES AFTER RESTRICTIONS***
-count
-
-mark 		nomiss          
-markout 	nomiss  female nevmar unmarpartner divsep exfamdum numberhhchild kidu2dum kid2to5 lths highschool somecol parttime black asian hispanic otherrace teage weekend      
-tab 		nomiss
-drop if 	nomiss==0 
+mark nomiss;
+markout nomiss  female nevmar unmarpartner divsep exfamdum numberhhchild kidu2dum kid2to5 lths highschool somecol parttime black asian hispanic otherrace age weekend;
+tab nomiss;
+drop if nomiss==0;
 
 
-save 		"sequences_0316", replace
-*/
+use ../data/generated_data_files/sequences_0316.dta;
+
 
 log close;

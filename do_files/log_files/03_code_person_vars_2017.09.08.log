@@ -3,7 +3,7 @@
        log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
 > Analysis\do_files\log_files/03_code_person_vars_2017.09.08.log
   log type:  text
- opened on:   8 Sep 2017, 17:42:08
+ opened on:   8 Sep 2017, 17:46:20
 
 . use ../data/generated_data_files/extract_hp.dta;
 
@@ -72,7 +72,7 @@
 .  egen kid2to5number=sum(_kid2to5), by(caseid);
 
 . /*respondent characteristics*/
-> gen refemale=(sex==2 & lineno==1);
+> gen female=(sex==2 & lineno==1);
 
 . gen rage=age if lineno==1;
 (17,391 missing values generated)
@@ -265,5 +265,5 @@ file ../data/generated_data_files/person_recodes.dta saved
        log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
 > Analysis\do_files\log_files/03_code_person_vars_2017.09.08.log
   log type:  text
- closed on:   8 Sep 2017, 17:42:16
+ closed on:   8 Sep 2017, 17:46:26
 ------------------------------------------------------------------

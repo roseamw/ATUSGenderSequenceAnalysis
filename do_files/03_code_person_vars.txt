@@ -51,7 +51,7 @@ egen kid2to5number=sum(_kid2to5), by(caseid);
 
 
 /*respondent characteristics*/
-gen refemale=(sex==2 & lineno==1);
+gen female=(sex==2 & lineno==1);
 gen rage=age if lineno==1;
 
 gen nevmar=(spousepres==3 & marst==6);
