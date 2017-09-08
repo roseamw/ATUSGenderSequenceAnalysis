@@ -3,7 +3,7 @@
        log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\do_files\log_files/03_
 > code_person_vars_2017.09.08.log
   log type:  text
- opened on:   8 Sep 2017, 17:12:02
+ opened on:   8 Sep 2017, 17:20:08
 
 . use ../data/generated_data_files/extract_hp.dta;
 
@@ -184,6 +184,20 @@
 .         tab educ edcat if edcat==0;
 .         };
 
+. gen lths=(edcat==1);
+
+. gen highschool=(edcat==2);
+
+. gen somecol=(edcat==3);
+
+. gen baormore=(edcat==4);
+
+. egen agecat=cut(age), at(0,18,25,35,45,55,86);
+
+.         label define agecat 1 "0-17" 2 "18-24" 3 "25-34" 4 "35-44" 5 "45-54" 6 "55+";
+
+.         label values agecat agecat;
+
 . numlabel, add;
 
 . save ../data/generated_data_files/person_recodes.dta, replace;
@@ -194,5 +208,5 @@ file ../data/generated_data_files/person_recodes.dta saved
        log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\do_files\log_files/03_
 > code_person_vars_2017.09.08.log
   log type:  text
- closed on:   8 Sep 2017, 17:12:09
+ closed on:   8 Sep 2017, 17:20:14
 -------------------------------------------------------------------------------------------------
