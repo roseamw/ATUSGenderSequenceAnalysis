@@ -28,7 +28,7 @@ gen _otherrelative=(relate==26);
 gen _foster=(relate==27);
 gen _othernonrelative=(relate==30);
 gen _notinhh=(relate==40);
-gen _kidu2dum=(relate==22 & age<2);
+gen _kidu2dum=((relate==22 | relate==27) & age<2);
 gen _kid2to5=((relate==22 | relate==27) & (age>=2 | age<=5));
 
 gen _exfamdum=(_hhchildo18==1 | _parent==1 | _siblingo18==1 | _otherrelative==1);
@@ -42,6 +42,12 @@ foreach v in spouse umpartner hhchild hhchildu18 hhchildo18 hhchildu13 grandchil
 	quietly egen `v'=max(_`v'), by(caseid);
 	*drop _`v';
 	};
+
+
+egen exfamnumber=sum(_exfamdum), by(caseid);
+egen kidu2number=sum(_kidu2dum), by(caseid);
+egen numberhhchild=sum(_hhchild), by(caseid); 
+egen kid2to5number=sum(_kid2to5), by(caseid);
 
 
 /*respondent characteristics*/
@@ -129,17 +135,17 @@ egen agecat=cut(age), at(0,18,25,35,45,55,86);
 	label define agecat 1 "0-17" 2 "18-24" 3 "25-34" 4 "35-44" 5 "45-54" 6 "55+";
 	label values agecat agecat;
 
-assert agecat!=0 if lineno==1;
+assert agecat!=. if lineno==1;
 if _rc {;
-	tab age agecat if agecat==0;
+	tab age agecat if agecat==.;
 	};
 
-gen under18=(agecat==1);
-gen a18to24=(agecat==2);
-gen a25to34=(agecat==3);
-gen a35to44=(agecat==4);
-gen a45to54=(agecat==5);
-gen a55plus=(agecat==6);
+gen under18=(agecat==0);
+gen a18to24=(agecat==18);
+gen a25to34=(agecat==25);
+gen a35to44=(agecat==35);
+gen a45to54=(agecat==45);
+gen a55plus=(agecat==55);
 
 
 gen unemployed=(fullpart==99);

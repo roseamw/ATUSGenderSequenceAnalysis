@@ -1,0 +1,59 @@
+#delimit;
+clear;
+set more off;
+
+local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
+
+log using log_files/04_select_sample_`logdate'.log, t replace;
+
+use ../data/generated_data_files/person_recodes.dta;
+
+count;
+
+/*keep only ATUS respondents*/
+keep if lineno==1;
+count;
+
+/* Limit to employed people*/
+drop if employ==2;
+count;
+
+/*Limit to parents*/
+drop if numberhhchild==0;
+
+/*
+// LIMIT Cases to 2016
+destring 		tucaseid, replace
+format			tucaseid %20.0g
+sort 			tucaseid
+keep if			tucaseid	> 20160000000000
+
+// Random Sample of 500 Cases from 2016
+	/*
+	sort			tucaseid
+	preserve
+		tempfile 	tmp
+		bysort 		tucaseid: keep if _n == 1
+		sample 		500, count
+		sort 		tucaseid
+		save 		`tmp'
+	restore
+	merge 			m:1 tucaseid using `tmp'
+	keep if 		_merge == 3
+	drop 			_merge
+	*/
+
+
+***Total # of CASES AFTER RESTRICTIONS***
+count
+
+mark 		nomiss          
+markout 	nomiss  female nevmar unmarpartner divsep exfamdum numberhhchild kidu2dum kid2to5 lths highschool somecol parttime black asian hispanic otherrace teage weekend      
+tab 		nomiss
+drop if 	nomiss==0 
+
+
+save 		"sequences_0316", replace
+*/
+
+log close;
