@@ -102,6 +102,23 @@ gen hispanic=(raceethnicity==4);
 gen otherrace=(raceethnicity==5);
 
 
+gen weekend=0;
+	replace weekend=1 if day>=1 & day<=6;
+
+gen edcat=0;
+	replace edcat=1 if educ>=10 & educ<=17;
+	replace edcat=2 if educ>=20 & educ<=21;
+	replace edcat=3 if educ>=30 & educ<=32;
+	replace edcat=4 if educ>=40 & educ<=43;
+
+	label define edcat 1 "lths" 2 "hs deg" 3 "some col" 4 "coll deg";
+	label values edcat edcat;
+
+assert edcat!=0 if lineno==1;
+if _rc {;
+	tab educ edcat if edcat==0;
+	};
+
 
 numlabel, add;
 

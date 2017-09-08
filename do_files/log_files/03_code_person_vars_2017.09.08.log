@@ -1,14 +1,14 @@
---------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\do_files\lo
-> g_files/03_code_person_vars_2017.09.08.log
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\do_files\log_files/03_
+> code_person_vars_2017.09.08.log
   log type:  text
- opened on:   8 Sep 2017, 17:02:20
+ opened on:   8 Sep 2017, 17:12:02
 
 . use ../data/generated_data_files/extract_hp.dta;
 
-. /*note that Joanna does roster and CPS recodes separately. with ATUS-X we can do the
-> m all at once.*/
+. /*note that Joanna does roster and CPS recodes separately. with ATUS-X we can do them all at on
+> ce.*/
 > 
 > rename hh_size numterrp;
 
@@ -50,9 +50,9 @@
 
 . gen _exfamdum=(_hhchildo18==1 | _parent==1 | _siblingo18==1 | _otherrelative==1);
 
-. foreach v in spouse umpartner hhchild hhchildu18 hhchildo18 hhchildu13 grandchild gr
-> andchildu18 grandchildo18 parent sibling siblingo18 otherrelative foster othernonrel
-> ative notinhh kidu2dum kid2to5 exfamdum {;
+. foreach v in spouse umpartner hhchild hhchildu18 hhchildo18 hhchildu13 grandchild grandchildu18
+>  grandchildo18 parent sibling siblingo18 otherrelative foster othernonrelative notinhh kidu2dum
+>  kid2to5 exfamdum {;
   2.         cap confirm var _`v';
   3.         if _rc {;
   4.                 disp "!!!!!`v' does not exist!!!!!";
@@ -79,8 +79,7 @@
 
 . /*umpartner=1 is cohabiting*/
 > 
-> egen marrmiss=rowmiss(nevmar separated divorced widowed married umpartner) if lineno
-> ==1;
+> egen marrmiss=rowmiss(nevmar separated divorced widowed married umpartner) if lineno==1;
 (17391 missing values generated)
 
 . assert marrmiss==0 if lineno==1;
@@ -106,8 +105,8 @@
 .         replace marstat=. if lineno!=1;
 (17,391 real changes made, 17,391 to missing)
 
-.         label define marstatlbl 1 "Married" 2 "Never Married" 3 "cohabiting"  4 "div
-> orced/sep/widowed", replace;
+.         label define marstatlbl 1 "Married" 2 "Never Married" 3 "cohabiting"  4 "divorced/sep/w
+> idowed", replace;
 
 .         label values marstat marstatlbl;
 
@@ -136,8 +135,7 @@
 .         replace raceethnicity=5 if (race==120 | race>=132) & hispan==100;
 (771 real changes made)
 
-.         label define raceethnicity 1 "white" 2 "black" 3 "asian" 4 "hispanic" 5 "oth
-> errace";
+.         label define raceethnicity 1 "white" 2 "black" 3 "asian" 4 "hispanic" 5 "otherrace";
 
 .         label values raceethnicity raceethnicity;
 
@@ -157,6 +155,35 @@
 
 . gen otherrace=(raceethnicity==5);
 
+. gen weekend=0;
+
+.         replace weekend=1 if day>=1 & day<=6;
+(8,033 real changes made)
+
+. gen edcat=0;
+
+.         replace edcat=1 if educ>=10 & educ<=17;
+(3,354 real changes made)
+
+.         replace edcat=2 if educ>=20 & educ<=21;
+(4,896 real changes made)
+
+.         replace edcat=3 if educ>=30 & educ<=32;
+(5,329 real changes made)
+
+.         replace edcat=4 if educ>=40 & educ<=43;
+(6,900 real changes made)
+
+.         label define edcat 1 "lths" 2 "hs deg" 3 "some col" 4 "coll deg";
+
+.         label values edcat edcat;
+
+. assert edcat!=0 if lineno==1;
+
+. if _rc {;
+.         tab educ edcat if edcat==0;
+.         };
+
 . numlabel, add;
 
 . save ../data/generated_data_files/person_recodes.dta, replace;
@@ -164,8 +191,8 @@ file ../data/generated_data_files/person_recodes.dta saved
 
 . log close;
       name:  <unnamed>
-       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\do_files\lo
-> g_files/03_code_person_vars_2017.09.08.log
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequenceAnalysis\do_files\log_files/03_
+> code_person_vars_2017.09.08.log
   log type:  text
- closed on:   8 Sep 2017, 17:02:26
---------------------------------------------------------------------------------------
+ closed on:   8 Sep 2017, 17:12:09
+-------------------------------------------------------------------------------------------------
