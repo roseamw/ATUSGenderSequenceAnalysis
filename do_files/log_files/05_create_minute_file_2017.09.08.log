@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
+> Analysis\do_files\log_files/05_create_minute_file_2017.09.08.log
+  log type:  text
+ opened on:   8 Sep 2017, 18:06:20
+
+. use ../data/generated_data_files/sequences_0316.dta;
+
+. count;
+  66,599
+
+. egen _temp_tot=sum(duration),by(caseid);
+
+. assert _temp_tot==1440;
+
+. drop _temp_tot;
+
+. sort caseid actline;
+
+. expand duration, gen(orig_rec);
+(4,450,681 observations created)
+
+. count;
+  4,517,280
+
+. sort caseid actline orig_rec;
+
+. bysort caseid actline: gen minute=_n;
+
+. egen maxmin=max(minute),by(caseid actline);
+
+. assert minute==duration if minute==maxmin;
+
+. log close;
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSequence
+> Analysis\do_files\log_files/05_create_minute_file_2017.09.08.log
+  log type:  text
+ closed on:   8 Sep 2017, 18:06:59
+------------------------------------------------------------------

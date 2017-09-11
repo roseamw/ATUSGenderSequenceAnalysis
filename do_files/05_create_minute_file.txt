@@ -1,0 +1,32 @@
+#delimit;
+clear;
+set more off;
+
+local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
+
+log using log_files/05_create_minute_file_`logdate'.log, t replace;
+
+use ../data/generated_data_files/sequences_0316.dta;
+count;
+unique caseid;
+local cases=r(sum); //total number of people
+disp "`cases'";
+egen _temp_tot=sum(duration),by(caseid);
+assert _temp_tot==1440;
+drop _temp_tot;
+
+sort caseid actline;
+
+expand duration, gen(orig_rec);
+count;
+sort caseid actline orig_rec;
+bysort caseid actline: gen minute=_n;
+
+egen maxmin=max(minute),by(caseid actline);
+assert minute==duration if minute==maxmin;
+
+unique caseid;
+local test=r(N)/1440; //total number of activity records divided by 1440 should equal number of people
+assert `test'==`cases';
+
+log close;
