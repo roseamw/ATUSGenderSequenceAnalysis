@@ -24,9 +24,13 @@ bysort caseid actline: gen minute=_n;
 
 egen maxmin=max(minute),by(caseid actline);
 assert minute==duration if minute==maxmin;
+drop maxmin;
+
 
 unique caseid;
 local test=r(N)/1440; //total number of activity records divided by 1440 should equal number of people
 assert `test'==`cases';
+
+save ../data/generated_data_files/sequences_all_minutes.dta, replace;
 
 log close;

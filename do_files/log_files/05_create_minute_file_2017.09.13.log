@@ -1,0 +1,64 @@
+----------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSEquenceAnalysis\do_files\log_files/05_create_minute_file_2017.09.13.log
+  log type:  text
+ opened on:  13 Sep 2017, 17:01:18
+
+. use ../data/generated_data_files/sequences_0316.dta;
+
+. count;
+  66,599
+
+. unique caseid;
+Number of unique values of caseid is  3137
+Number of records is  66599
+
+. local cases=r(sum);
+
+.  //total number of people
+> disp "`cases'";
+3137
+
+. egen _temp_tot=sum(duration),by(caseid);
+
+. assert _temp_tot==1440;
+
+. drop _temp_tot;
+
+. sort caseid actline;
+
+. expand duration, gen(orig_rec);
+(4,450,681 observations created)
+
+. count;
+  4,517,280
+
+. sort caseid actline orig_rec;
+
+. bysort caseid actline: gen minute=_n;
+
+. egen maxmin=max(minute),by(caseid actline);
+
+. assert minute==duration if minute==maxmin;
+
+. drop maxmin;
+
+. unique caseid;
+Number of unique values of caseid is  3137
+Number of records is  4517280
+
+. local test=r(N)/1440;
+
+.  //total number of activity records divided by 1440 should equal number of people
+> assert `test'==`cases';
+
+. save ../data/generated_data_files/sequences_all_minutes.dta, replace;
+(note: file ../data/generated_data_files/sequences_all_minutes.dta not found)
+file ../data/generated_data_files/sequences_all_minutes.dta saved
+
+. log close;
+      name:  <unnamed>
+       log:  C:\Users\floo0017\Desktop\research\ATUSGenderSEquenceAnalysis\do_files\log_files/05_create_minute_file_2017.09.13.log
+  log type:  text
+ closed on:  13 Sep 2017, 17:02:29
+----------------------------------------------------------------------------------------------------------------------------------------
