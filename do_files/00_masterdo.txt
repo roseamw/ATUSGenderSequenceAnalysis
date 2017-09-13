@@ -4,3 +4,6 @@ set more off;
 
 do 01_run_extract.txt;
 do 02_code_activities.txt;
+do 03_code_person_vars.txt;
+do 04_select_sample.txt;
+do 05_create_minute_file.txt;
