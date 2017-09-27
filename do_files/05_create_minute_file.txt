@@ -6,6 +6,12 @@ local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
 
 log using log_files/05_create_minute_file_`logdate'.log, t replace;
 
+foreach package in unique {;
+	capture which `package';
+	if _rc==111 ssc install `package';
+	};
+	
+
 use ../data/generated_data_files/sequences_0316.dta;
 count;
 unique caseid;
@@ -29,6 +35,11 @@ drop maxmin;
 
 unique caseid;
 local test=r(N)/1440; //total number of activity records divided by 1440 should equal number of people
+
+disp "test value is `test'";
+disp "cases value is `cases'";
+disp "if these are the same, the following test should pass!";
+
 assert `test'==`cases';
 
 save ../data/generated_data_files/sequences_all_minutes.dta, replace;
