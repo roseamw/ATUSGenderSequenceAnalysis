@@ -8,14 +8,19 @@ log using log_files/05_create_minute_file_`logdate'.log, t replace;
 
 foreach package in unique {;
 	capture which `package';
-	if _rc==111 ssc install `package';
+	if _rc==111 {;
+		ssc install `package';
+		};
+	if !_rc {;
+		adoupdate unique, update;
+		};
 	};
 	
 
 use ../data/generated_data_files/sequences_0316.dta;
 count;
 unique caseid;
-local cases=r(sum); //total number of people
+local cases=r(unique); //total number of people
 disp "`cases'";
 egen _temp_tot=sum(duration),by(caseid);
 assert _temp_tot==1440;
