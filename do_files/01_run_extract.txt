@@ -2,6 +2,9 @@
 clear;
 set more off;
 
+/// Set file path to local repository 
+/// cd "C:\Users\Joanna\Dropbox\Repositories\ATUSGenderSequenceAnalysis"
+
 local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
 
 log using log_files\01_run_extract_`logdate'.log, t replace;
