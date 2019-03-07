@@ -1,8 +1,8 @@
 // SEQUENCES MASTER FILE
 
 clear
-global 	jppath 		"D:\GitHub"									/*Set up Joanna's file path*/
-cd 					"$jppath\ATUSGenderSequenceAnalysis_data"
+global 	jppath 		"C:\Users\Joanna\Dropbox\Repositories"		/*Set up Joanna's file path*/
+cd 					"$jppath\ATUSGenderSequenceAnalysis\data"
 
 
 log using "Sequences Log", text replace

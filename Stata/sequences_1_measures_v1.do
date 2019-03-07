@@ -3,7 +3,7 @@ clear
 // This file draws upon the "Multi-Year ATUS Data Files" downloaded from: https://www.bls.gov/tus/datafiles_0316.htm
 // The .do files for the initial data is located: "ATUSGenderSequenceAnalysis\Stata\ATUS Setup"
 
-global jppath "D:\GitHub"		/*Set up Joanna's file path*/
+global jppath "C:\Users\Joanna\Dropbox\Repositories"		/*Set up Joanna's file path*/
 
 cd 	"$jppath\ATUSGenderSequenceAnalysis_data"
 use "D:\Dropbox\Data\ATUS\ATUS0316\atusact_0316\atus0316act", replace	/*This is where my data is stored. How to share? */

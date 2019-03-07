@@ -1,0 +1,47 @@
+-----------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\Joanna\Dropbox\Repositories\ATUSGenderSequenceAnalysis\data\atus_extracts
+> \log_files\01_run_extract_2019.03.06.log
+  log type:  text
+ opened on:   6 Mar 2019, 21:10:45
+
+. local run_setting quietly;
+
+. local exnum 00520;
+
+. `run_setting' {;
+unable to change to .\data\atus_extracts
+r(170);
+
+end of do-file
+
+r(170);
+
+. cd "C:\Users\Joanna\Dropbox\Repositories\ATUSGenderSequenceAnalysis"
+C:\Users\Joanna\Dropbox\Repositories\ATUSGenderSequenceAnalysis
+
+. do "C:\Users\Joanna\AppData\Local\Temp\STD53b0_000000.tmp"
+
+. #delimit;
+delimiter now ;
+. clear;
+
+. set more off;
+
+. local logdate = string( d(`c(current_date)'), "%dCY.N.D" );
+
+. log using log_files\01_run_extract_`logdate'.log, t replace;
+log file already open
+r(604);
+
+end of do-file
+
+r(604);
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\Joanna\Dropbox\Repositories\ATUSGenderSequenceAnalysis\data\atus_extracts
+> \log_files\01_run_extract_2019.03.06.log
+  log type:  text
+ closed on:   6 Mar 2019, 21:11:12
+-----------------------------------------------------------------------------------------------

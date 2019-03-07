@@ -1,0 +1,22 @@
+-----------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\Joanna\Dropbox\Repositories\ATUSGenderSequenceAnalysis\log_files\01_run_e
+> xtract_2019.03.06.log
+  log type:  text
+ opened on:   6 Mar 2019, 21:12:56
+
+. local run_setting quietly;
+
+. local exnum 00520;
+
+. `run_setting' {;
+Running ATUS-X extract...
+File successfully created!
+
+. log close;
+      name:  <unnamed>
+       log:  C:\Users\Joanna\Dropbox\Repositories\ATUSGenderSequenceAnalysis\log_files\01_run_e
+> xtract_2019.03.06.log
+  log type:  text
+ closed on:   6 Mar 2019, 21:13:01
+-----------------------------------------------------------------------------------------------
